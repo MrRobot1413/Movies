@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="ua.mrrobot1413.movies.ui.MainActivity">
+
+    <item
+        android:id="@+id/fragmentHome"
+        android:icon="@drawable/ic_movies"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@+id/fragmentFavorite"
+        android:icon="@drawable/ic_heart"
+        android:title="@string/favorite"/>
+
+    <item
+        android:id="@+id/fragmentReminders"
+        android:icon="@drawable/ic_timer"
+        android:title="@string/reminders"/>
+
+</menu>
