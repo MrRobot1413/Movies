@@ -76,15 +76,16 @@ class HomeViewModel @Inject constructor(
             _upcomingMovies.emit(Result.loading(null))
             try {
                 getUpcomingMoviesUseCase.invoke().cachedIn(viewModelScope).collect { upcoming ->
-                    // Emit upcoming movies
-                    _upcomingMovies.emit(Result.success(upcoming))
-
+                    // Awaiting popular movies
                     popularMoviesDeferred?.await()?.collect { popular ->
-                        // Emit popular movies
-                        _popularMovies.emit(Result.success(popular))
-                        // Emit top movies
+                        // Awaiting top movies
                         topRatedMoviesDeferred?.await()?.collect { topRated ->
+                            // Emit popular movies
+                            _popularMovies.emit(Result.success(popular))
+                            // Emit top movies
                             _topRatedMovies.emit(Result.success(topRated))
+                            // Emit upcoming movies
+                            _upcomingMovies.emit(Result.success(upcoming))
                         }
                     }
                 }

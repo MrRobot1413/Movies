@@ -73,17 +73,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.run {
                 lifecycleScope.launch {
                     popularMovies.collect {
-                        println("Popular: " + it?.status)
                         when (it?.status) {
                             RequestStatus.LOADING -> {
-                                root.forEach { view ->
-                                    if(view.id != lottieLoaderAnimation.id) {
-                                        view.hide()
-                                    }
-                                }
-                                lottieLoaderAnimation.show()
+                                loading()
                             }
                             RequestStatus.SUCCESS -> {
+                                successLoad()
                                 it.data?.let { data -> popularAdapter.submitData(data) }
                             }
                             RequestStatus.ERROR -> {
@@ -100,10 +95,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 lifecycleScope.launch {
                     topRatedMovies.collect {
-                        println("Top: " + it?.status)
                         when (it?.status) {
+                            RequestStatus.LOADING -> {
+                                loading()
+                            }
                             RequestStatus.SUCCESS -> {
-                                topRatedRecyclerView.show()
+                                successLoad()
                                 it.data?.let { data -> topRatedAdapter.submitData(data) }
                             }
                             RequestStatus.ERROR -> {
@@ -118,15 +115,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 lifecycleScope.launch {
                     upcomingMovies.collect {
-                        println("Upcoming: " + it?.status)
                         when (it?.status) {
+                            RequestStatus.LOADING -> {
+                                loading()
+                            }
                             RequestStatus.SUCCESS -> {
-                                root.forEach { view ->
-                                    if(view.id != lottieLoaderAnimation.id) {
-                                        view.show()
-                                    }
-                                }
-                                lottieLoaderAnimation.hide()
+                                successLoad()
                                 it.data?.let { data -> upcomingAdapter.submitData(data) }
                             }
                             RequestStatus.ERROR -> {
@@ -142,6 +136,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
             }
+        }
+    }
+
+    private fun loading() {
+        binding.run {
+            txtPopular.hide()
+            txtViewAllPopular.hide()
+            txtTopRated.hide()
+            txtViewAllTopRated.hide()
+            txtUpcoming.hide()
+            txtViewAllUpcoming.hide()
+            lottieLoaderAnimation.show()
+        }
+    }
+
+    private fun successLoad() {
+        binding.run {
+            txtPopular.show()
+            txtViewAllPopular.show()
+            txtTopRated.show()
+            txtViewAllTopRated.show()
+            txtUpcoming.show()
+            txtViewAllUpcoming.show()
+            lottieLoaderAnimation.hide()
         }
     }
 }
