@@ -1,5 +1,7 @@
 package ua.mrrobot1413.movies.ui.home
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -26,14 +28,14 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
 ) : ViewModel() {
 
-    private val _popularMovies = MutableStateFlow<Result<PagingData<Movie>?>?>(null)
-    val popularMovies: MutableStateFlow<Result<PagingData<Movie>?>?> = _popularMovies
+    private val _popularMovies = MutableLiveData<Result<PagingData<Movie>?>?>()
+    val popularMovies: LiveData<Result<PagingData<Movie>?>?> = _popularMovies
 
-    private val _topRatedMovies = MutableStateFlow<Result<PagingData<Movie>?>?>(null)
-    val topRatedMovies: MutableStateFlow<Result<PagingData<Movie>?>?> = _topRatedMovies
+    private val _topRatedMovies = MutableLiveData<Result<PagingData<Movie>?>?>(null)
+    val topRatedMovies: LiveData<Result<PagingData<Movie>?>?> = _topRatedMovies
 
-    private val _upcomingMovies = MutableStateFlow<Result<PagingData<Movie>?>?>(null)
-    val upcomingMovies: MutableStateFlow<Result<PagingData<Movie>?>?> = _upcomingMovies
+    private val _upcomingMovies = MutableLiveData<Result<PagingData<Movie>?>?>(null)
+    val upcomingMovies: LiveData<Result<PagingData<Movie>?>?> = _upcomingMovies
 
     private var popularMoviesDeferred: Deferred<Flow<PagingData<Movie>?>?>? = null
     private var topRatedMoviesDeferred: Deferred<Flow<PagingData<Movie>?>?>? = null
@@ -46,13 +48,13 @@ class HomeViewModel @Inject constructor(
 
     private fun getPopularMovies() {
         popularMoviesDeferred = viewModelScope.async {
-            _popularMovies.emit(Result.loading(null))
+            _popularMovies.value = Result.loading(null)
             return@async try {
                 delay(200)
                 getPopularMoviesUseCase.invoke().cachedIn(viewModelScope)
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
-                _popularMovies.emit(Result.error(null, e.message))
+                _popularMovies.value = Result.error(null, e.message)
                 null
             }
         }
@@ -60,12 +62,12 @@ class HomeViewModel @Inject constructor(
 
     private fun getTopRatedMovies() {
         topRatedMoviesDeferred = viewModelScope.async {
-            _topRatedMovies.emit(Result.loading(null))
+            _topRatedMovies.value = Result.loading(null)
             return@async try {
                 getTopRatedMoviesUseCase.invoke().cachedIn(viewModelScope)
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
-                _topRatedMovies.emit(Result.error(null, e.message))
+                _topRatedMovies.value = Result.error(null, e.message)
                 null
             }
         }
@@ -73,7 +75,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getUpcomingMovies() {
         viewModelScope.launch {
-            _upcomingMovies.emit(Result.loading(null))
+            _upcomingMovies.value = Result.loading(null)
             try {
                 getUpcomingMoviesUseCase.invoke().cachedIn(viewModelScope).collect { upcoming ->
                     // Awaiting popular movies
@@ -81,17 +83,18 @@ class HomeViewModel @Inject constructor(
                         // Awaiting top movies
                         topRatedMoviesDeferred?.await()?.collect { topRated ->
                             // Emit popular movies
-                            _popularMovies.emit(Result.success(popular))
+                            delay(1000)
+                            _popularMovies.value = Result.success(popular)
                             // Emit top movies
-                            _topRatedMovies.emit(Result.success(topRated))
+                            _topRatedMovies.value = Result.success(topRated)
                             // Emit upcoming movies
-                            _upcomingMovies.emit(Result.success(upcoming))
+                            _upcomingMovies.value = Result.success(upcoming)
                         }
                     }
                 }
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
-                _topRatedMovies.emit(Result.error(null, e.message))
+                _topRatedMovies.value = Result.error(null, e.message)
             }
         }
     }

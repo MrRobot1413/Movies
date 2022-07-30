@@ -8,5 +8,20 @@
     <fragment
         android:id="@+id/fragmentHome"
         android:name="ua.mrrobot1413.movies.ui.home.HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_fragmentHome_to_viewAllFragment"
+            app:destination="@id/viewAllFragment">
+
+            <argument
+                android:name="requestType"
+                app:argType="ua.mrrobot1413.movies.data.network.model.RequestType"/>
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/viewAllFragment"
+        android:name="ua.mrrobot1413.movies.ui.viewAll.ViewAllFragment"
+        android:label="ViewAllFragment"
+        tools:layout="@layout/fragment_view_all"/>
 </navigation>
