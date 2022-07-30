@@ -77,11 +77,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    override fun onPause() {
-        super.onDestroyView()
-        binding.popularRecyclerView.hide()
-    }
-
     private fun initObservers() {
         viewModel.run {
             binding.run {
