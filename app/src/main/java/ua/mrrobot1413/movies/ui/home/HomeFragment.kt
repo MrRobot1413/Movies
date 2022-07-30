@@ -3,10 +3,12 @@ package ua.mrrobot1413.movies.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.forEach
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +17,7 @@ import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.FooterAdapter
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
+import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentHomeBinding
 import ua.mrrobot1413.movies.ui.home.recycler.LatestRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.home.recycler.TopRatedRecyclerViewAdapter
@@ -49,10 +52,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun init() {
         binding.run {
             viewModel.getMovies()
-//
-//            swipeRefreshLayout.setOnRefreshListener {
-//                viewModel.getMovies()
-//            }
+
+            txtViewAllPopular.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToViewAllFragment(RequestType.POPULAR))
+            }
+            txtViewAllTopRated.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToViewAllFragment(RequestType.TOP_RATED))
+            }
+            txtViewAllUpcoming.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToViewAllFragment(RequestType.UPCOMING))
+            }
 
             popularRecyclerView.adapter = popularAdapter.withLoadStateFooter(FooterAdapter())
             popularRecyclerView.layoutManager =
@@ -71,67 +80,74 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun initObservers() {
         viewModel.run {
             binding.run {
-                lifecycleScope.launch {
-                    popularMovies.collect {
-                        when (it?.status) {
-                            RequestStatus.LOADING -> {
+                popularMovies.observe(viewLifecycleOwner) {
+                    when (it?.status) {
+                        RequestStatus.LOADING -> {
+                            if(popularRecyclerView.isEmpty()) {
                                 loading()
                             }
-                            RequestStatus.SUCCESS -> {
-                                successLoad()
+                        }
+                        RequestStatus.SUCCESS -> {
+                            successLoad()
+                            lifecycleScope.launch {
                                 it.data?.let { data -> popularAdapter.submitData(data) }
                             }
-                            RequestStatus.ERROR -> {
-                                showSnackbar(
-                                    requireView(),
-                                    getString(R.string.unexpected_error_occurred)
-                                )
-                            }
-                            else -> {
-                                println("err")
-                            }
+                        }
+                        RequestStatus.ERROR -> {
+                            showSnackbar(
+                                requireView(),
+                                getString(R.string.unexpected_error_occurred)
+                            )
+                        }
+                        else -> {
+                            println("err")
                         }
                     }
                 }
-                lifecycleScope.launch {
-                    topRatedMovies.collect {
-                        when (it?.status) {
-                            RequestStatus.LOADING -> {
+                topRatedMovies.observe(viewLifecycleOwner) {
+                    when (it?.status) {
+                        RequestStatus.LOADING -> {
+                            if(popularRecyclerView.isEmpty()) {
                                 loading()
                             }
-                            RequestStatus.SUCCESS -> {
-                                successLoad()
+                        }
+                        RequestStatus.SUCCESS -> {
+                            successLoad()
+                            lifecycleScope.launch {
                                 it.data?.let { data -> topRatedAdapter.submitData(data) }
                             }
-                            RequestStatus.ERROR -> {
-                                showSnackbar(
-                                    requireView(),
-                                    getString(R.string.unexpected_error_occurred)
-                                )
-                            }
-                            else -> {}
                         }
+                        RequestStatus.ERROR -> {
+                            showSnackbar(
+                                requireView(),
+                                getString(R.string.unexpected_error_occurred)
+                            )
+                        }
+                        else -> {}
                     }
                 }
-                lifecycleScope.launch {
-                    upcomingMovies.collect {
-                        when (it?.status) {
-                            RequestStatus.LOADING -> {
+
+                upcomingMovies.observe(viewLifecycleOwner) {
+                    when (it?.status) {
+                        RequestStatus.LOADING -> {
+                            if(popularRecyclerView.isEmpty()) {
                                 loading()
                             }
-                            RequestStatus.SUCCESS -> {
-                                successLoad()
+                        }
+                        RequestStatus.SUCCESS -> {
+                            successLoad()
+                            lifecycleScope.launch {
                                 it.data?.let { data -> upcomingAdapter.submitData(data) }
                             }
-                            RequestStatus.ERROR -> {
-                                showSnackbar(
-                                    requireView(),
-                                    getString(R.string.unexpected_error_occurred)
-                                )
-                            }
-                            null -> {
-                                println(null)
-                            }
+                        }
+                        RequestStatus.ERROR -> {
+                            showSnackbar(
+                                requireView(),
+                                getString(R.string.unexpected_error_occurred)
+                            )
+                        }
+                        null -> {
+                            println(null)
                         }
                     }
                 }
@@ -147,6 +163,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             txtViewAllTopRated.hide()
             txtUpcoming.hide()
             txtViewAllUpcoming.hide()
+            popularRecyclerView.hide()
+            topRatedRecyclerView.hide()
+            upcomingRecyclerView.hide()
             lottieLoaderAnimation.show()
         }
     }
@@ -159,6 +178,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             txtViewAllTopRated.show()
             txtUpcoming.show()
             txtViewAllUpcoming.show()
+            popularRecyclerView.show()
+            topRatedRecyclerView.show()
+            upcomingRecyclerView.show()
             lottieLoaderAnimation.hide()
         }
     }
