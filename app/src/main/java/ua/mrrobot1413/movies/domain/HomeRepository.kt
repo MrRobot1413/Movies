@@ -9,4 +9,5 @@ interface HomeRepository {
     suspend fun getPopularMovies(): Flow<PagingData<Movie>>
     suspend fun getTopRatedMovies(): Flow<PagingData<Movie>>
     suspend fun getUpcomingMovies(): Flow<PagingData<Movie>>
+    suspend fun searchMovies(query: String): Flow<PagingData<Movie>>
 }

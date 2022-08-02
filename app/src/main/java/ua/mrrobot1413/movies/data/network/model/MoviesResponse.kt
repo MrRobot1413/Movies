@@ -18,7 +18,7 @@ data class Movie(
     @SerializedName("adult")
     val isAdult: Boolean,
     @SerializedName("poster_path")
-    val frontPoster: String,
+    val frontPoster: String?,
     @SerializedName("backdrop_path")
     val backgroundPoster: String,
     @SerializedName("vote_average")

@@ -9,7 +9,7 @@
         android:id="@+id/img"
         android:layout_width="200dp"
         android:layout_height="270dp"
-        android:src="@drawable/ic_search"
+        android:src="@drawable/ic_movie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

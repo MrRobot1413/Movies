@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "201134473494",
+    "project_id": "movies-10dad",
+    "storage_bucket": "movies-10dad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201134473494:android:8bdc5f69312e8afc125037",
+        "android_client_info": {
+          "package_name": "ua.mrrobot1413.movies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201134473494-s5m9pa7jbiimrl8kjqtl6rgu4uvoqa8j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMm6kLSuo_2mBWV36QphDnIEZJxknU4Lc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201134473494-s5m9pa7jbiimrl8kjqtl6rgu4uvoqa8j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

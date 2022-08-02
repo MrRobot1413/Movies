@@ -28,6 +28,7 @@ interface Api {
     @GET("search/movie")
     suspend fun searchMovies(
         @Query("query") query: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("limit") limit: Int = 150
     ): MoviesResponse
 }

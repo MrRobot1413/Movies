@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ua.mrrobot1413.movies.App
 import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.data.network.model.Result
 import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
