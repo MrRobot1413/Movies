@@ -12,7 +12,9 @@ class SearchMoviesUseCase @Inject constructor(
     private val homeRepository: HomeRepository
 ) {
 
-    suspend fun invoke(): Flow<PagingData<Movie>> {
-        return withContext(Dispatchers.IO) { homeRepository.getPopularMovies() }
+    suspend fun invoke(query: String): Flow<PagingData<Movie>> {
+        return withContext(Dispatchers.IO) {
+            homeRepository.searchMovies(query)
+        }
     }
 }

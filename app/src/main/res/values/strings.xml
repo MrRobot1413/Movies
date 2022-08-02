@@ -21,4 +21,6 @@
     <string name="popular">Popular</string>
     <string name="view_all">View all</string>
     <string name="upcoming">Upcoming</string>
+    <string name="search">Search</string>
+    <string name="load_more">Load more</string>
 </resources>

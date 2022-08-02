@@ -27,9 +27,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:paddingTop="70dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@+id/txtPopular"
-        tools:ignore="RtlSymmetry" />
+        android:clipToPadding="false" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieLoaderAnimation"

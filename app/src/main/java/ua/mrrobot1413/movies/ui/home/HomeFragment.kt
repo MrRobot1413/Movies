@@ -1,6 +1,7 @@
 package ua.mrrobot1413.movies.ui.home
 
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.view.forEach
 import androidx.core.view.isEmpty
@@ -14,6 +15,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import ua.mrrobot1413.movies.App
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.FooterAdapter
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
@@ -49,18 +51,50 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initObservers()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        binding.run {
+            popularRecyclerView.visibility = View.GONE
+            upcomingRecyclerView.visibility = View.GONE
+            topRatedRecyclerView.visibility = View.GONE
+        }
+    }
+
     private fun init() {
         binding.run {
             viewModel.getMovies()
 
+            searchEt.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
+            }
+            searchEtHolder.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
+            }
+            searchFieldHolder.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
+            }
+
             txtViewAllPopular.setOnClickListener {
-                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToViewAllFragment(RequestType.POPULAR))
+                findNavController().navigate(
+                    HomeFragmentDirections.actionFragmentHomeToViewAllFragment(
+                        RequestType.POPULAR
+                    )
+                )
             }
             txtViewAllTopRated.setOnClickListener {
-                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToViewAllFragment(RequestType.TOP_RATED))
+                findNavController().navigate(
+                    HomeFragmentDirections.actionFragmentHomeToViewAllFragment(
+                        RequestType.TOP_RATED
+                    )
+                )
             }
             txtViewAllUpcoming.setOnClickListener {
-                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToViewAllFragment(RequestType.UPCOMING))
+                findNavController().navigate(
+                    HomeFragmentDirections.actionFragmentHomeToViewAllFragment(
+                        RequestType.UPCOMING
+                    )
+                )
             }
 
             popularRecyclerView.adapter = popularAdapter.withLoadStateFooter(FooterAdapter())
@@ -83,9 +117,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 popularMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if(popularRecyclerView.isEmpty()) {
-                                loading()
-                            }
+                            loading()
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
@@ -107,9 +139,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 topRatedMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if(popularRecyclerView.isEmpty()) {
-                                loading()
-                            }
+                            loading()
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
@@ -130,14 +160,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 upcomingMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if(popularRecyclerView.isEmpty()) {
-                                loading()
-                            }
+                            loading()
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
                             lifecycleScope.launch {
-                                it.data?.let { data -> upcomingAdapter.submitData(data) }
+                                it.data?.let { data ->
+                                    upcomingAdapter.submitData(data)
+                                }
                             }
                         }
                         RequestStatus.ERROR -> {

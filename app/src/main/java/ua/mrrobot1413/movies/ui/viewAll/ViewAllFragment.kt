@@ -11,9 +11,8 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import me.ibrahimsn.lib.SmoothBottomBar
 import ua.mrrobot1413.movies.R
-import ua.mrrobot1413.movies.base.FooterAdapter
+import ua.mrrobot1413.movies.base.ExtendedFooterAdapter
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentViewAllBinding
@@ -56,7 +55,7 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
                 findNavController().popBackStack()
             }
 
-            recyclerView.adapter = adapter.withLoadStateFooter(ViewFooterAdapter())
+            recyclerView.adapter = adapter.withLoadStateFooter(ExtendedFooterAdapter())
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         }
     }
