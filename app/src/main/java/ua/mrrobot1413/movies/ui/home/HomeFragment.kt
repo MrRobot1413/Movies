@@ -65,13 +65,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.run {
             viewModel.getMovies()
 
-            searchEt.setOnClickListener {
-                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
-            }
-            searchEtHolder.setOnClickListener {
-                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
-            }
-            searchFieldHolder.setOnClickListener {
+            searchView.setOnClickListener {
                 findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
             }
 
