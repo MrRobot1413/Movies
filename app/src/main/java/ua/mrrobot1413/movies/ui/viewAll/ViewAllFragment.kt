@@ -40,8 +40,6 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
 
     private fun init() {
         binding.run {
-            (activity as MainActivity).findViewById<View>(R.id.bottomBar).hide()
-
             val requestType = arguments?.getParcelable<RequestType>(REQUEST_TYPE)
             requestType?.let { viewModel.getMovies(requestType = it) }
 
@@ -58,11 +56,6 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
             recyclerView.adapter = adapter.withLoadStateFooter(ExtendedFooterAdapter())
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (activity as MainActivity).findViewById<View>(R.id.bottomBar).show()
     }
 
     private fun initObservers() {
