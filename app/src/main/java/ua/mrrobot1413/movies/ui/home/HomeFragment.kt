@@ -51,16 +51,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initObservers()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        binding.run {
-            popularRecyclerView.visibility = View.GONE
-            upcomingRecyclerView.visibility = View.GONE
-            topRatedRecyclerView.visibility = View.GONE
-        }
-    }
-
     private fun init() {
         binding.run {
             viewModel.getMovies()

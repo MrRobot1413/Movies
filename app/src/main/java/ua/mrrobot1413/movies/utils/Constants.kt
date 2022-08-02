@@ -7,4 +7,5 @@ object Constants {
     const val IMG_URL = "https://image.tmdb.org/t/p/original"
 
     const val REQUEST_TYPE = "requestType"
+    const val SHOW_KEYBOARD = "showKeyboard"
 }

@@ -20,6 +20,7 @@ import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.ExtendedFooterAdapter
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.databinding.FragmentSearchBinding
+import ua.mrrobot1413.movies.utils.Constants.SHOW_KEYBOARD
 import ua.mrrobot1413.movies.utils.UIUtils
 import ua.mrrobot1413.movies.utils.UIUtils.hide
 import ua.mrrobot1413.movies.utils.UIUtils.show
@@ -36,18 +37,20 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        init()
+        init(savedInstanceState?.getBoolean(SHOW_KEYBOARD, true) ?: true)
         initObservers()
     }
 
-    private fun init() {
+    private fun init(showKeyboard: Boolean) {
         binding.run {
             topAppBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
 
-            searchEt.requestFocus()
-            UIUtils.showSoftKeyboard(activity as AppCompatActivity, searchEt)
+            if(showKeyboard) {
+                searchEt.requestFocus()
+                UIUtils.showSoftKeyboard(activity as AppCompatActivity, searchEt)
+            }
             searchEt.setOnEditorActionListener { _, id, _ ->
                 if (id == EditorInfo.IME_ACTION_SEARCH) {
                     UIUtils.hideKeyboard(activity as AppCompatActivity, searchEt)
@@ -99,5 +102,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(SHOW_KEYBOARD, adapter.snapshot().isEmpty())
     }
 }
