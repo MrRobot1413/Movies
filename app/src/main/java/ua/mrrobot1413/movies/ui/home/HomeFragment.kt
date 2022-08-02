@@ -1,22 +1,26 @@
 package ua.mrrobot1413.movies.ui.home
 
 import android.os.Bundle
-import android.view.*
+import android.view.MotionEvent
+import android.view.View
+import androidx.core.view.forEach
+import androidx.core.view.isEmpty
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import ua.mrrobot1413.movies.App
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.FooterAdapter
-import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentHomeBinding
-import ua.mrrobot1413.movies.ui.MainActivity
 import ua.mrrobot1413.movies.ui.home.recycler.LatestRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.home.recycler.TopRatedRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.home.recycler.UpcomingRecyclerViewAdapter
@@ -24,33 +28,20 @@ import ua.mrrobot1413.movies.utils.UIUtils.hide
 import ua.mrrobot1413.movies.utils.UIUtils.show
 import ua.mrrobot1413.movies.utils.UIUtils.showSnackbar
 
-@ViewModelScoped
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val binding: FragmentHomeBinding by viewBinding()
-    private val viewModel: HomeViewModel by hiltNavGraphViewModels(R.id.nav_graph)
+    private val viewModel: HomeViewModel by viewModels()
 
     private val popularAdapter by lazy {
-        LatestRecyclerViewAdapter {
-            findNavController().navigate(
-                HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it)
-            )
-        }
+        LatestRecyclerViewAdapter()
     }
     private val topRatedAdapter by lazy {
-        TopRatedRecyclerViewAdapter {
-            findNavController().navigate(
-                HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it)
-            )
-        }
+        TopRatedRecyclerViewAdapter()
     }
     private val upcomingAdapter by lazy {
-        UpcomingRecyclerViewAdapter {
-            findNavController().navigate(
-                HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it)
-            )
-        }
+        UpcomingRecyclerViewAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,9 +51,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initObservers()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        binding.run {
+            popularRecyclerView.visibility = View.GONE
+            upcomingRecyclerView.visibility = View.GONE
+            topRatedRecyclerView.visibility = View.GONE
+        }
+    }
+
     private fun init() {
         binding.run {
-            searchView.setOnClickListener {
+            viewModel.getMovies()
+
+            searchEt.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
+            }
+            searchEtHolder.setOnClickListener {
+                findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
+            }
+            searchFieldHolder.setOnClickListener {
                 findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
             }
 
@@ -88,36 +97,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 )
             }
 
-            viewModel.getPopularMovies(1)
-            viewModel.getTopRatedMovies(1)
-            viewModel.getUpcomingMovies(1)
+            popularRecyclerView.adapter = popularAdapter.withLoadStateFooter(FooterAdapter())
+            popularRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-            initLists()
+            topRatedRecyclerView.adapter = topRatedAdapter.withLoadStateFooter(FooterAdapter())
+            topRatedRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+            upcomingRecyclerView.adapter = upcomingAdapter.withLoadStateFooter(FooterAdapter())
+            upcomingRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
 
     private fun initObservers() {
-        var popularFirstLoad = true
-        var topFirstLoad = true
-        var upcomingFirstLoad = true
         viewModel.run {
             binding.run {
                 popularMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if(popularFirstLoad) {
-                                loading()
-                                popularFirstLoad = false
-                            }
+                            loading()
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
-                            val list = it.data?.results?.let { movies ->
-                                (popularAdapter.currentList as MutableList<Movie>).plus(
-                                    movies
-                                )
+                            lifecycleScope.launch {
+                                it.data?.let { data -> popularAdapter.submitData(data) }
                             }
-                            popularAdapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {
                             showSnackbar(
@@ -133,19 +139,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 topRatedMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if(topFirstLoad) {
-                                loading()
-                                topFirstLoad = false
-                            }
+                            loading()
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
-                            val list = it.data?.results?.let { movies ->
-                                (topRatedAdapter.currentList as MutableList<Movie>).plus(
-                                    movies
-                                )
+                            lifecycleScope.launch {
+                                it.data?.let { data -> topRatedAdapter.submitData(data) }
                             }
-                            topRatedAdapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {
                             showSnackbar(
@@ -153,27 +153,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 getString(R.string.unexpected_error_occurred)
                             )
                         }
-                        else -> {
-                            println("err")
-                        }
+                        else -> {}
                     }
                 }
+
                 upcomingMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if(upcomingFirstLoad) {
-                                loading()
-                                upcomingFirstLoad = false
-                            }
+                            loading()
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
-                            val list = it.data?.results?.let { movies ->
-                                (upcomingAdapter.currentList as MutableList<Movie>).plus(
-                                    movies
-                                )
+                            lifecycleScope.launch {
+                                it.data?.let { data ->
+                                    upcomingAdapter.submitData(data)
+                                }
                             }
-                            upcomingAdapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {
                             showSnackbar(
@@ -181,8 +176,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 getString(R.string.unexpected_error_occurred)
                             )
                         }
-                        else -> {
-                            println("err")
+                        null -> {
+                            println(null)
                         }
                     }
                 }
@@ -217,67 +212,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             topRatedRecyclerView.show()
             upcomingRecyclerView.show()
             lottieLoaderAnimation.hide()
-        }
-    }
-
-    private fun initLists() {
-        binding.run {
-            popularRecyclerView.adapter = popularAdapter
-            popularRecyclerView.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-            popularRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = popularRecyclerView.layoutManager as LinearLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val visibleItemCount = layoutManager.childCount
-                    val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                        viewModel.popularPages++
-                        viewModel.getPopularMovies(viewModel.popularPages)
-                    }
-                }
-            })
-
-            topRatedRecyclerView.adapter = topRatedAdapter
-            topRatedRecyclerView.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-            topRatedRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = topRatedRecyclerView.layoutManager as LinearLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val visibleItemCount = layoutManager.childCount
-                    val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                        viewModel.topPages++
-                        viewModel.getTopRatedMovies(viewModel.topPages)
-                    }
-                }
-            })
-
-            upcomingRecyclerView.adapter = upcomingAdapter
-            upcomingRecyclerView.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-            upcomingRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    val layoutManager = upcomingRecyclerView.layoutManager as LinearLayoutManager
-                    val totalItemCount = layoutManager.itemCount
-                    val visibleItemCount = layoutManager.childCount
-                    val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
-
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
-                        viewModel.upcomingPages++
-                        viewModel.getUpcomingMovies(viewModel.upcomingPages)
-                    }
-                }
-            })
         }
     }
 }

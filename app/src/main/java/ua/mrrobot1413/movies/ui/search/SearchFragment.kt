@@ -1,8 +1,6 @@
 package ua.mrrobot1413.movies.ui.search
 
-import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -23,8 +20,6 @@ import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.ExtendedFooterAdapter
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.databinding.FragmentSearchBinding
-import ua.mrrobot1413.movies.ui.home.HomeFragmentDirections
-import ua.mrrobot1413.movies.utils.Constants.SHOW_KEYBOARD
 import ua.mrrobot1413.movies.utils.UIUtils
 import ua.mrrobot1413.movies.utils.UIUtils.hide
 import ua.mrrobot1413.movies.utils.UIUtils.show
@@ -35,34 +30,24 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private val binding: FragmentSearchBinding by viewBinding()
     private val viewModel: SearchViewModel by viewModels()
     private val adapter by lazy {
-        SearchRecyclerViewAdapter {
-            findNavController().navigate(
-                SearchFragmentDirections.actionSearchFragmentToFragmentDetailedMovie().setId(it)
-            )
-        }
-    }
-
-    companion object {
-        private const val RECYCLER_POSITION = "recyclerPosition"
+        SearchRecyclerViewAdapter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        init(savedInstanceState?.getBoolean(SHOW_KEYBOARD, true) ?: true)
+        init()
         initObservers()
     }
 
-    private fun init(showKeyboard: Boolean) {
+    private fun init() {
         binding.run {
             topAppBar.setNavigationOnClickListener {
                 findNavController().popBackStack()
             }
 
-            if(showKeyboard) {
-                searchEt.requestFocus()
-                UIUtils.showSoftKeyboard(activity as AppCompatActivity, searchEt)
-            }
+            searchEt.requestFocus()
+            UIUtils.showSoftKeyboard(activity as AppCompatActivity, searchEt)
             searchEt.setOnEditorActionListener { _, id, _ ->
                 if (id == EditorInfo.IME_ACTION_SEARCH) {
                     UIUtils.hideKeyboard(activity as AppCompatActivity, searchEt)
@@ -114,11 +99,5 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 }
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(SHOW_KEYBOARD, adapter.snapshot().isEmpty())
-        outState.putParcelable(RECYCLER_POSITION, binding.recyclerView.layoutManager?.onSaveInstanceState())
     }
 }

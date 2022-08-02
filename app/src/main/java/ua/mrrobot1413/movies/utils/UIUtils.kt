@@ -1,18 +1,13 @@
 package ua.mrrobot1413.movies.utils
 
-import android.animation.ObjectAnimator
 import android.content.Context
-import android.transition.TransitionManager
+import android.os.IBinder
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
-
 
 object UIUtils {
 
@@ -38,17 +33,5 @@ object UIUtils {
     fun hideKeyboard(activity: AppCompatActivity, view: View) {
         val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
-    fun TextView.toggleReadMoreTextView(viewGroup: ViewGroup, linesWhenCollapsed: Int) {
-        if (this.maxLines != Integer.MAX_VALUE) {
-            // exapand
-            this.maxLines = Integer.MAX_VALUE
-        } else {
-            // collapse
-            this.maxLines = linesWhenCollapsed
-        }
-        // start animation
-        TransitionManager.beginDelayedTransition(viewGroup)
     }
 }
