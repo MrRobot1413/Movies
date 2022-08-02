@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
+import ua.mrrobot1413.movies.App
 import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.data.network.model.MoviesResponse
 import ua.mrrobot1413.movies.data.network.model.Result

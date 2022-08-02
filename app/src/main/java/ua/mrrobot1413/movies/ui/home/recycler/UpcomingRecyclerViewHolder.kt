@@ -18,7 +18,7 @@ class UpcomingRecyclerViewHolder(private val binding: ItemMovieBinding): BaseVie
             Glide.with(root.context)
                 .load(Constants.IMG_URL + item.frontPoster)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(20)))
                 .placeholder(R.drawable.background_placeholder)
                 .into(img)
