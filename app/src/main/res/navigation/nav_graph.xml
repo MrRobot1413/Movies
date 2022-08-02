@@ -32,4 +32,9 @@
         android:name="ua.mrrobot1413.movies.ui.search.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/fragmentFavorite"
+        android:name="ua.mrrobot1413.movies.ui.favorite.FavoriteFragment"
+        tools:layout="@layout/fragment_favorite"/>
 </navigation>
