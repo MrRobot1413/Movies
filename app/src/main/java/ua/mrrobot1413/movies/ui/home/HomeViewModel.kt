@@ -51,7 +51,6 @@ class HomeViewModel @Inject constructor(
         popularMoviesDeferred = viewModelScope.async {
             _popularMovies.value = Result.loading(null)
             return@async try {
-                delay(200)
                 getPopularMoviesUseCase.invoke().cachedIn(viewModelScope)
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
