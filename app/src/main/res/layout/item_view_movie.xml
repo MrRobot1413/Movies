@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
+    android:layout_gravity="center_horizontal"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -10,6 +11,7 @@
         android:layout_width="200dp"
         android:layout_height="270dp"
         android:src="@drawable/ic_movie"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
