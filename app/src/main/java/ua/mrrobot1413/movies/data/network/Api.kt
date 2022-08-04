@@ -1,8 +1,11 @@
 package ua.mrrobot1413.movies.data.network
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
+import ua.mrrobot1413.movies.data.network.model.DetailedMovie
 import ua.mrrobot1413.movies.data.network.model.MoviesResponse
+import java.math.BigInteger
 import java.util.*
 
 interface Api {
@@ -31,4 +34,10 @@ interface Api {
         @Query("page") page: Int,
         @Query("limit") limit: Int = 150
     ): MoviesResponse
+
+    @GET("movie/{id}")
+    suspend fun getMovieDetails(@Path("id") id: Int): DetailedMovie
+
+    @GET("movie/{id}/similar")
+    suspend fun getSimilarMovies(@Path("id") id: Int): MoviesResponse
 }

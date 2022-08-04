@@ -8,4 +8,5 @@ object Constants {
 
     const val REQUEST_TYPE = "requestType"
     const val SHOW_KEYBOARD = "showKeyboard"
+    const val ID = "id"
 }

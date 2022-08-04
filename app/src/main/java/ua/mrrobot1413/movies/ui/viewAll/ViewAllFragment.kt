@@ -17,6 +17,7 @@ import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentViewAllBinding
 import ua.mrrobot1413.movies.ui.MainActivity
+import ua.mrrobot1413.movies.ui.home.HomeFragmentDirections
 import ua.mrrobot1413.movies.utils.Constants.REQUEST_TYPE
 import ua.mrrobot1413.movies.utils.UIUtils.hide
 import ua.mrrobot1413.movies.utils.UIUtils.show
@@ -28,7 +29,9 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
     private val binding: FragmentViewAllBinding by viewBinding()
     private val viewModel: ViewAllViewModel by viewModels()
     private val adapter by lazy {
-        ViewAllRecyclerViewAdapter()
+        ViewAllRecyclerViewAdapter {
+            findNavController().navigate(ViewAllFragmentDirections.actionViewAllFragmentToFragmentDetailedMovie().setId(it))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
