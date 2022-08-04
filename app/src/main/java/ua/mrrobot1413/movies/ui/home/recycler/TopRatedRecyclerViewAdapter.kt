@@ -4,11 +4,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import ua.mrrobot1413.movies.base.BasePagingDataAdapter
+import ua.mrrobot1413.movies.base.BaseViewHolder
 import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.databinding.ItemMovieBinding
+import java.math.BigInteger
 
-class TopRatedRecyclerViewAdapter :
-    PagingDataAdapter<Movie, TopRatedRecyclerViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
+class TopRatedRecyclerViewAdapter(
+    private val onItemClicked: (Int) -> Unit
+) :
+    BasePagingDataAdapter<Movie, TopRatedRecyclerViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
         }
@@ -19,13 +24,11 @@ class TopRatedRecyclerViewAdapter :
         ): Boolean {
             return oldItem == newItem
         }
+    }, {
+        onItemClicked(it)
     }) {
 
-    override fun onBindViewHolder(holder: TopRatedRecyclerViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopRatedRecyclerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Movie> {
         return TopRatedRecyclerViewHolder(
             ItemMovieBinding.inflate(
                 LayoutInflater.from(parent.context),

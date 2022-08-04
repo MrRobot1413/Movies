@@ -36,7 +36,7 @@ class ViewAllViewModel @Inject constructor(
                     RequestType.TOP_RATED -> getTopRatedMoviesUseCase.invoke()
                     RequestType.UPCOMING -> getUpcomingMoviesUseCase.invoke()
                 }
-                useCase.cachedIn(viewModelScope).collect {
+                useCase?.cachedIn(viewModelScope)?.collect {
                     delay(600)
                     _movies.postValue(Result.success(it))
                 }

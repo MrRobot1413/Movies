@@ -16,7 +16,7 @@ class PopularMoviesPagingSource(
             val response = api.getPopularMovies(page)
             LoadResult.Page(
                 data = response.results,
-                prevKey = if (page == 1) null else page.minus(1),
+                prevKey = null,
                 nextKey = if (response.results.isEmpty()) null else page.plus(1)
             )
         } catch (exception: Exception) {
