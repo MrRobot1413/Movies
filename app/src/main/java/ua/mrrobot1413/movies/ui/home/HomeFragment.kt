@@ -27,6 +27,7 @@ import ua.mrrobot1413.movies.ui.home.recycler.UpcomingRecyclerViewAdapter
 import ua.mrrobot1413.movies.utils.UIUtils.hide
 import ua.mrrobot1413.movies.utils.UIUtils.show
 import ua.mrrobot1413.movies.utils.UIUtils.showSnackbar
+import java.math.BigInteger
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -35,13 +36,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel: HomeViewModel by viewModels()
 
     private val popularAdapter by lazy {
-        LatestRecyclerViewAdapter()
+        LatestRecyclerViewAdapter {
+            findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it))
+        }
     }
     private val topRatedAdapter by lazy {
-        TopRatedRecyclerViewAdapter()
+        TopRatedRecyclerViewAdapter {
+            findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it))
+        }
     }
     private val upcomingAdapter by lazy {
-        UpcomingRecyclerViewAdapter()
+        UpcomingRecyclerViewAdapter {
+            findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,17 +111,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             loading()
                         }
                         RequestStatus.SUCCESS -> {
-                            successLoad()
                             lifecycleScope.launch {
                                 it.data?.let { data -> popularAdapter.submitData(data) }
                             }
                         }
-                        RequestStatus.ERROR -> {
-                            showSnackbar(
-                                requireView(),
-                                getString(R.string.unexpected_error_occurred)
-                            )
-                        }
+                        RequestStatus.ERROR -> Unit
                         else -> {
                             println("err")
                         }
@@ -126,26 +127,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             loading()
                         }
                         RequestStatus.SUCCESS -> {
-                            successLoad()
                             lifecycleScope.launch {
                                 it.data?.let { data -> topRatedAdapter.submitData(data) }
                             }
                         }
-                        RequestStatus.ERROR -> {
-                            showSnackbar(
-                                requireView(),
-                                getString(R.string.unexpected_error_occurred)
-                            )
-                        }
+                        RequestStatus.ERROR -> Unit
                         else -> {}
                     }
                 }
 
                 upcomingMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
-                        RequestStatus.LOADING -> {
-                            loading()
-                        }
                         RequestStatus.SUCCESS -> {
                             successLoad()
                             lifecycleScope.launch {

@@ -7,14 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import ua.mrrobot1413.movies.App
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEmpty
 import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.data.network.model.Result
 import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
@@ -38,8 +34,8 @@ class HomeViewModel @Inject constructor(
     private val _upcomingMovies = MutableLiveData<Result<PagingData<Movie>?>?>(null)
     val upcomingMovies: LiveData<Result<PagingData<Movie>?>?> = _upcomingMovies
 
-    private var popularMoviesDeferred: Deferred<Flow<PagingData<Movie>?>?>? = null
-    private var topRatedMoviesDeferred: Deferred<Flow<PagingData<Movie>?>?>? = null
+    private var popularMoviesJob: Job? = null
+    private var topRatedMoviesJob: Job? = null
 
     fun getMovies() {
         getPopularMovies()
@@ -48,27 +44,31 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getPopularMovies() {
-        popularMoviesDeferred = viewModelScope.async {
+        popularMoviesJob = viewModelScope.launch {
             _popularMovies.value = Result.loading(null)
-            return@async try {
-                getPopularMoviesUseCase.invoke().cachedIn(viewModelScope)
+            return@launch try {
+                getPopularMoviesUseCase.invoke().cachedIn(viewModelScope).collect {
+                    _popularMovies.value = Result.success(it)
+                        this.cancel()
+                }
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
                 _popularMovies.value = Result.error(null, e.message)
-                null
             }
         }
     }
 
     private fun getTopRatedMovies() {
-        topRatedMoviesDeferred = viewModelScope.async {
+        topRatedMoviesJob = viewModelScope.launch {
             _topRatedMovies.value = Result.loading(null)
-            return@async try {
-                getTopRatedMoviesUseCase.invoke().cachedIn(viewModelScope)
+            return@launch try {
+                getTopRatedMoviesUseCase.invoke().cachedIn(viewModelScope).collect {
+                    _topRatedMovies.value = Result.success(it)
+                    this.cancel()
+                }
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
                 _topRatedMovies.value = Result.error(null, e.message)
-                null
             }
         }
     }
@@ -77,21 +77,15 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _upcomingMovies.value = Result.loading(null)
             try {
-                getUpcomingMoviesUseCase.invoke().cachedIn(viewModelScope).collect { upcoming ->
-                    // Awaiting popular movies
-                    popularMoviesDeferred?.await()?.collect { popular ->
-                        // Awaiting top movies
-                        topRatedMoviesDeferred?.await()?.collect { topRated ->
-                            // Emit popular movies
-                            delay(1000)
-                            _popularMovies.value = Result.success(popular)
-                            // Emit top movies
-                            _topRatedMovies.value = Result.success(topRated)
-                            // Emit upcoming movies
-                            _upcomingMovies.value = Result.success(upcoming)
-                        }
-                    }
+                getUpcomingMoviesUseCase.invoke().cachedIn(viewModelScope).onCompletion {
+                    popularMoviesJob?.join()
+                    topRatedMoviesJob?.join()
+                }.collect {
+                    popularMoviesJob?.join()
+                    topRatedMoviesJob?.join()
+                    _upcomingMovies.value = Result.success(it)
                 }
+
             } catch (e: Exception) {
                 println("Ex: ${e.message}")
                 _topRatedMovies.value = Result.error(null, e.message)
