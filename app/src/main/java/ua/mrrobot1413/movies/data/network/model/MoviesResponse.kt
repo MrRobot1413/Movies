@@ -12,7 +12,7 @@ data class MoviesResponse(
 
 data class Movie(
     @SerializedName("id")
-    val id: BigInteger,
+    val id: Int,
     @SerializedName("title")
     val title: String,
     @SerializedName("adult")

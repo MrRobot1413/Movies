@@ -20,6 +20,7 @@ import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.ExtendedFooterAdapter
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.databinding.FragmentSearchBinding
+import ua.mrrobot1413.movies.ui.home.HomeFragmentDirections
 import ua.mrrobot1413.movies.utils.Constants.SHOW_KEYBOARD
 import ua.mrrobot1413.movies.utils.UIUtils
 import ua.mrrobot1413.movies.utils.UIUtils.hide
@@ -31,7 +32,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private val binding: FragmentSearchBinding by viewBinding()
     private val viewModel: SearchViewModel by viewModels()
     private val adapter by lazy {
-        SearchRecyclerViewAdapter()
+        SearchRecyclerViewAdapter {
+            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFragmentDetailedMovie().setId(it))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
