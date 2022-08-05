@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEmpty
+import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.data.network.model.Result
 import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
@@ -37,7 +37,11 @@ class HomeViewModel @Inject constructor(
     private var popularMoviesJob: Job? = null
     private var topRatedMoviesJob: Job? = null
 
-    fun getMovies() {
+    init {
+        getMovies()
+    }
+
+    private fun getMovies() {
         getPopularMovies()
         getTopRatedMovies()
         getUpcomingMovies()

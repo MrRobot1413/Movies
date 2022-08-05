@@ -21,7 +21,7 @@ class HomeRepositoryImpl @Inject constructor(private val api: Api) : HomeReposit
     override suspend fun getPopularMovies(): Flow<PagingData<Movie>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 25
+                pageSize = 25,
             ),
             pagingSourceFactory = { PopularMoviesPagingSource(api) }
         ).flow
