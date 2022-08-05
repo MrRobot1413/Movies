@@ -11,27 +11,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.CenterInside
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.databinding.FragmentDetailedMovieBinding
 import ua.mrrobot1413.movies.ui.detailed.recycler.GenresRecyclerViewAdapter
+import ua.mrrobot1413.movies.ui.detailed.recycler.SimilarMoviesRecyclerViewAdapter
 import ua.mrrobot1413.movies.utils.Constants.ID
 import ua.mrrobot1413.movies.utils.Constants.IMG_URL
 import ua.mrrobot1413.movies.utils.UIUtils.showSnackbar
 import ua.mrrobot1413.movies.utils.UIUtils.toggleReadMoreTextView
-import java.math.BigInteger
-import java.text.SimpleDateFormat
+import java.text.NumberFormat
 import java.util.*
 
 @AndroidEntryPoint
@@ -43,6 +43,9 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
 
     private val genresAdapter by lazy {
         GenresRecyclerViewAdapter()
+    }
+    private val similarMoviesAdapter by lazy {
+        SimilarMoviesRecyclerViewAdapter()
     }
 
     override fun onCreateView(
@@ -78,17 +81,25 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
         binding.run {
             makeTransparentBackground()
             val id = arguments?.getInt(ID)
-            id?.let { viewModel.getMovieDetails(it) }
+            id?.let {
+                viewModel.getMovieDetails(it)
+                viewModel.getSimilarMovies(it)
+            }
 
             imgClose.setOnClickListener { dismiss() }
 
-            txtOverview.toggleReadMoreTextView(root, 3)
+            txtOverview.toggleReadMoreTextView(root, 4)
             txtOverview.setOnClickListener {
-                txtOverview.toggleReadMoreTextView(root, 3)
+                txtOverview.toggleReadMoreTextView(root, 4)
             }
 
             genresRecyclerView.adapter = genresAdapter
-            genresRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            genresRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+            similarMoviesRecyclerView.adapter = similarMoviesAdapter
+            similarMoviesRecyclerView.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         }
     }
 
@@ -115,14 +126,25 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
                                 )
                                 .into(movieImg)
 
-                            txtTitle.text = it.data?.title
-                            genresAdapter.submitList(it.data?.genres)
-                            txtOverview.text = it.data?.overview
+                            it.data?.let { data ->
+                                txtTitle.text = data.title
+                                genresAdapter.submitList(data.genres)
+                                txtOverview.text = data.overview
+                                txtYear.text = data.releaseDate.split("-")[0]
+                                txtRating.text = data.rating.toString()
+                                txtReleaseDate.text = data.releaseDate.replace("-", "/")
+                                txtOriginalTitle.text = data.originalTitle
+                                txtOriginalLanguage.text = data.originalLanguage
+                                txtDuration.text =
+                                    data.runtime.toString() + " " + getString(R.string.min)
+                                val format = NumberFormat.getCurrencyInstance()
+                                format.maximumFractionDigits = 0
+                                format.currency = Currency.getInstance("USD")
 
-                            val date = SimpleDateFormat(
-                                "dd MMM yyyy",
-                                Locale.getDefault()
-                            ).format(Date(it.data?.releaseDate))
+                                val budget = format.format(data.budget)
+                                txtBudget.text = budget
+                                txtStatus.text = data.status
+                            }
                         }
                         RequestStatus.ERROR -> {
                             showSnackbar(
@@ -132,6 +154,11 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
                         }
                     }
                 }
+                similarMovies.observe(viewLifecycleOwner) {
+                    lifecycleScope.launch {
+                        similarMoviesAdapter.submitList(it?.results)
+                    }
+                }
             }
         }
     }
@@ -139,14 +166,18 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
     private fun successLoad() {
         binding.run {
             lottieLoaderAnimation.isVisible = false
+            imgAddToFavorite.isVisible = true
+            detailedMovieInfoLayout.isVisible = true
             headerLayout.isVisible = true
         }
     }
 
     private fun loading() {
         binding.run {
-            lottieLoaderAnimation.isVisible = true
-            headerLayout.isVisible = false
+            lottieLoaderAnimation.isVisible = false
+            imgAddToFavorite.isVisible = false
+            detailedMovieInfoLayout.isVisible = false
+            headerLayout.isVisible = true
         }
     }
 

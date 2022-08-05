@@ -1,6 +1,8 @@
 package ua.mrrobot1413.movies.ui.search
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
@@ -33,8 +36,14 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private val viewModel: SearchViewModel by viewModels()
     private val adapter by lazy {
         SearchRecyclerViewAdapter {
-            findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToFragmentDetailedMovie().setId(it))
+            findNavController().navigate(
+                SearchFragmentDirections.actionSearchFragmentToFragmentDetailedMovie().setId(it)
+            )
         }
+    }
+
+    companion object {
+        private const val RECYCLER_POSITION = "recyclerPosition"
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -110,5 +119,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(SHOW_KEYBOARD, adapter.snapshot().isEmpty())
+        outState.putParcelable(RECYCLER_POSITION, binding.recyclerView.layoutManager?.onSaveInstanceState())
     }
 }

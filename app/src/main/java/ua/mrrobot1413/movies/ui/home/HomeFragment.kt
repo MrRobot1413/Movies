@@ -1,23 +1,29 @@
 package ua.mrrobot1413.movies.ui.home
 
 import android.os.Bundle
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import androidx.core.view.forEach
 import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.SavedStateViewModelFactory
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.App
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.FooterAdapter
+import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentHomeBinding
@@ -29,25 +35,32 @@ import ua.mrrobot1413.movies.utils.UIUtils.show
 import ua.mrrobot1413.movies.utils.UIUtils.showSnackbar
 import java.math.BigInteger
 
+@ViewModelScoped
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val binding: FragmentHomeBinding by viewBinding()
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by hiltNavGraphViewModels(R.id.nav_graph)
 
     private val popularAdapter by lazy {
         LatestRecyclerViewAdapter {
-            findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it))
+            findNavController().navigate(
+                HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it)
+            )
         }
     }
     private val topRatedAdapter by lazy {
         TopRatedRecyclerViewAdapter {
-            findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it))
+            findNavController().navigate(
+                HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it)
+            )
         }
     }
     private val upcomingAdapter by lazy {
         UpcomingRecyclerViewAdapter {
-            findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it))
+            findNavController().navigate(
+                HomeFragmentDirections.actionFragmentHomeToFragmentDetailedMovie().setId(it)
+            )
         }
     }
 
@@ -60,8 +73,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun init() {
         binding.run {
-            viewModel.getMovies()
-
             searchView.setOnClickListener {
                 findNavController().navigate(HomeFragmentDirections.actionFragmentHomeToSearchFragment())
             }
@@ -87,6 +98,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     )
                 )
             }
+
+            popularRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                }
+            })
 
             popularRecyclerView.adapter = popularAdapter.withLoadStateFooter(FooterAdapter())
             popularRecyclerView.layoutManager =
