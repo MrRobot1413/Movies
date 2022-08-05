@@ -10,6 +10,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.data.network.model.DetailedMovie
 import ua.mrrobot1413.movies.data.network.model.Movie
+import ua.mrrobot1413.movies.data.network.model.MoviesResponse
 import ua.mrrobot1413.movies.data.network.model.Result
 import ua.mrrobot1413.movies.domain.useCase.GetMovieDetailsUseCase
 import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
@@ -21,13 +22,13 @@ import javax.inject.Inject
 class DetailedMovieViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _details = MutableLiveData<Result<DetailedMovie>>()
     val details: LiveData<Result<DetailedMovie>> = _details
 
-    private val _similarMovies = MutableLiveData<Result<PagingData<Movie>?>?>()
-    val similarMovies: LiveData<Result<PagingData<Movie>?>?> = _similarMovies
+    private val _similarMovies = MutableLiveData<MoviesResponse?>()
+    val similarMovies: LiveData<MoviesResponse?> = _similarMovies
 
     fun getMovieDetails(id: Int) {
         viewModelScope.launch {
@@ -38,6 +39,16 @@ class DetailedMovieViewModel @Inject constructor(
                 _details.value = Result.success(data)
             } catch (e: Exception) {
                 _details.value = Result.error(data, e.message)
+            }
+        }
+    }
+
+    fun getSimilarMovies(id: Int) {
+        viewModelScope.launch {
+            try {
+                _similarMovies.value = getSimilarMoviesUseCase.invoke(id)
+            } catch (e: Exception) {
+                println(e.message)
             }
         }
     }
