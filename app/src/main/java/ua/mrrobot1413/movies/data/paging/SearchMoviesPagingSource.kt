@@ -1,22 +1,22 @@
-package ua.mrrobot1413.movies.data.network.paging
+package ua.mrrobot1413.movies.data.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import ua.mrrobot1413.movies.data.network.Api
 import ua.mrrobot1413.movies.data.network.model.Movie
-import ua.mrrobot1413.movies.data.network.model.RequestType
 
-class TopRatedMoviesPagingSource(
-    private val api: Api
+class SearchMoviesPagingSource(
+    private val api: Api,
+    private val query: String
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
         val page = params.key ?: 1
         return try {
-            val response = api.getTopRatedMovies(page)
+            val response = api.searchMovies(query, page)
             LoadResult.Page(
                 data = response.results,
-                prevKey = if (page == 1) null else page.minus(1),
+                prevKey = null,
                 nextKey = if (response.results.isEmpty()) null else page.plus(1)
             )
         } catch (exception: Exception) {
@@ -28,8 +28,8 @@ class TopRatedMoviesPagingSource(
 
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
     }
 }

@@ -2,13 +2,15 @@ package ua.mrrobot1413.movies.ui.home.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import ua.mrrobot1413.movies.data.network.model.Movie
 import ua.mrrobot1413.movies.databinding.ItemMovieBinding
 
-class TopRatedRecyclerViewAdapter :
-    PagingDataAdapter<Movie, TopRatedRecyclerViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
+class TopRatedRecyclerViewAdapter(
+    private val onItemClicked: (Int) -> Unit
+) :
+    ListAdapter<Movie, TopRatedRecyclerViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
         override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
             return oldItem.id == newItem.id
         }
@@ -20,9 +22,12 @@ class TopRatedRecyclerViewAdapter :
             return oldItem == newItem
         }
     }) {
-
     override fun onBindViewHolder(holder: TopRatedRecyclerViewHolder, position: Int) {
-        getItem(position)?.let { holder.bind(it) }
+        val item = getItem(position)
+        holder.bind(item)
+        holder.itemView.setOnClickListener {
+            onItemClicked(item.id)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopRatedRecyclerViewHolder {

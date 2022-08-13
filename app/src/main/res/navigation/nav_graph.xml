@@ -2,8 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/fragmentHome"
-    android:id="@+id/nav_graph">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentHome">
 
     <fragment
         android:id="@+id/fragmentHome"
@@ -15,7 +15,19 @@
 
             <argument
                 android:name="requestType"
-                app:argType="ua.mrrobot1413.movies.data.network.model.RequestType"/>
+                app:argType="ua.mrrobot1413.movies.data.network.model.RequestType" />
+        </action>
+        <action
+            android:id="@+id/action_fragmentHome_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_fragmentHome_to_fragmentDetailedMovie"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
         </action>
     </fragment>
 
@@ -23,5 +35,50 @@
         android:id="@+id/viewAllFragment"
         android:name="ua.mrrobot1413.movies.ui.viewAll.ViewAllFragment"
         android:label="ViewAllFragment"
-        tools:layout="@layout/fragment_view_all"/>
+        tools:layout="@layout/fragment_view_all">
+        <action
+            android:id="@+id/action_viewAllFragment_to_fragmentDetailedMovie"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="ua.mrrobot1413.movies.ui.search.SearchFragment"
+        android:label="SearchFragment"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_fragmentDetailedMovie"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragmentFavorite"
+        android:name="ua.mrrobot1413.movies.ui.favorite.FavoriteFragment"
+        tools:layout="@layout/fragment_favorite" />
+
+    <dialog
+        android:id="@+id/fragmentDetailedMovie"
+        android:name="ua.mrrobot1413.movies.ui.detailed.DetailedMovieFragment"
+        tools:layout="@layout/fragment_detailed_movie">
+        <action
+            android:id="@+id/action_fragmentDetailedMovie_self"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+    </dialog>
 </navigation>

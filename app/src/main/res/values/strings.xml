@@ -21,4 +21,19 @@
     <string name="popular">Popular</string>
     <string name="view_all">View all</string>
     <string name="upcoming">Upcoming</string>
+    <string name="search">Search</string>
+    <string name="load_more">Load more</string>
+    <string name="background_image">Background image</string>
+    <string name="add_to_favorite">Add to favorite</string>
+    <string name="more">More</string>
+    <string name="less">Less</string>
+    <string name="date">Release date:</string>
+    <string name="original_title">Original title:</string>
+    <string name="original_language">Original language:</string>
+    <string name="duration">Duration:</string>
+    <string name="min">min</string>
+    <string name="budget">Budget:</string>
+    <string name="similar_movies">Similar movies</string>
+    <string name="close">Close</string>
+    <string name="status">Status:</string>
 </resources>
