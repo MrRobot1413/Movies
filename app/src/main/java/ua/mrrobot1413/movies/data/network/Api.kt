@@ -13,26 +13,26 @@ interface Api {
     @GET("movie/popular")
     suspend fun getPopularMovies(
         @Query("page") page: Int,
-        @Query("language") language: String = Locale.getDefault().isO3Language
+        @Query("limit") limit: Int = 20
     ): MoviesResponse
 
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
         @Query("page") page: Int,
-        @Query("language") language: String = Locale.getDefault().isO3Language
+        @Query("limit") limit: Int = 20
     ): MoviesResponse
 
     @GET("movie/upcoming")
     suspend fun getUpcomingMovies(
         @Query("page") page: Int,
-        @Query("language") language: String = Locale.getDefault().isO3Language
+        @Query("limit") limit: Int = 20
     ): MoviesResponse
 
     @GET("search/movie")
     suspend fun searchMovies(
         @Query("query") query: String,
         @Query("page") page: Int,
-        @Query("limit") limit: Int = 150
+        @Query("limit") limit: Int = 50
     ): MoviesResponse
 
     @GET("movie/{id}")

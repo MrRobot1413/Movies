@@ -9,9 +9,14 @@ import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.data.network.model.Movie
+import ua.mrrobot1413.movies.data.network.model.MoviesResponse
 import ua.mrrobot1413.movies.data.network.model.Result
 import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
 import ua.mrrobot1413.movies.domain.useCase.GetTopRatedMoviesUseCase
@@ -25,74 +30,57 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
 ) : ViewModel() {
 
-    private val _popularMovies = MutableLiveData<Result<PagingData<Movie>?>?>()
-    val popularMovies: LiveData<Result<PagingData<Movie>?>?> = _popularMovies
+    private val _popularMovies = MutableLiveData<Result<MoviesResponse>?>()
+    val popularMovies: LiveData<Result<MoviesResponse>?> = _popularMovies
 
-    private val _topRatedMovies = MutableLiveData<Result<PagingData<Movie>?>?>(null)
-    val topRatedMovies: LiveData<Result<PagingData<Movie>?>?> = _topRatedMovies
+    private val _topRatedMovies = MutableLiveData<Result<MoviesResponse>?>(null)
+    var topRatedMovies: LiveData<Result<MoviesResponse>?> = _topRatedMovies
 
-    private val _upcomingMovies = MutableLiveData<Result<PagingData<Movie>?>?>(null)
-    val upcomingMovies: LiveData<Result<PagingData<Movie>?>?> = _upcomingMovies
+    private val _upcomingMovies = MutableLiveData<Result<MoviesResponse>?>(null)
+    val upcomingMovies: LiveData<Result<MoviesResponse>?> = _upcomingMovies
 
-    private var popularMoviesJob: Job? = null
-    private var topRatedMoviesJob: Job? = null
+    var popularPages = 1
+    var topPages = 1
+    var upcomingPages = 1
 
-    init {
-        getMovies()
-    }
-
-    private fun getMovies() {
-        getPopularMovies()
-        getTopRatedMovies()
-        getUpcomingMovies()
-    }
-
-    private fun getPopularMovies() {
-        popularMoviesJob = viewModelScope.launch {
+    fun getPopularMovies(page: Int) {
+        viewModelScope.launch {
             _popularMovies.value = Result.loading(null)
-            return@launch try {
-                getPopularMoviesUseCase.invoke().cachedIn(viewModelScope).collect {
-                    _popularMovies.value = Result.success(it)
-                        this.cancel()
-                }
+            var data: MoviesResponse? = null
+            try {
+                data = getPopularMoviesUseCase.invoke(page)
+                _popularMovies.value = Result.success(data)
             } catch (e: Exception) {
-                println("Ex: ${e.message}")
-                _popularMovies.value = Result.error(null, e.message)
+                println("Ex 1: ${e.message}")
+                _popularMovies.value = Result.error(data, e.message)
             }
         }
     }
 
-    private fun getTopRatedMovies() {
-        topRatedMoviesJob = viewModelScope.launch {
+    fun getTopRatedMovies(page: Int) {
+        viewModelScope.launch {
             _topRatedMovies.value = Result.loading(null)
+            var data: MoviesResponse? = null
             return@launch try {
-                getTopRatedMoviesUseCase.invoke().cachedIn(viewModelScope).collect {
-                    _topRatedMovies.value = Result.success(it)
-                    this.cancel()
-                }
+                data = getTopRatedMoviesUseCase.invoke(page)
+                _topRatedMovies.value = Result.success(data)
             } catch (e: Exception) {
-                println("Ex: ${e.message}")
-                _topRatedMovies.value = Result.error(null, e.message)
+                println("Ex 2: ${e.message}")
+                _topRatedMovies.value = Result.error(data, e.message)
             }
         }
     }
 
-    private fun getUpcomingMovies() {
+    fun getUpcomingMovies(page: Int) {
         viewModelScope.launch {
             _upcomingMovies.value = Result.loading(null)
+            var data: MoviesResponse? = null
             try {
-                getUpcomingMoviesUseCase.invoke().cachedIn(viewModelScope).onCompletion {
-                    popularMoviesJob?.join()
-                    topRatedMoviesJob?.join()
-                }.collect {
-                    popularMoviesJob?.join()
-                    topRatedMoviesJob?.join()
-                    _upcomingMovies.value = Result.success(it)
-                }
-
+                data = getUpcomingMoviesUseCase.invoke(page)
+                _upcomingMovies.value = Result.success(data)
             } catch (e: Exception) {
-                println("Ex: ${e.message}")
-                _topRatedMovies.value = Result.error(null, e.message)
+                println("Ex 3: ${e.message}")
+                _topRatedMovies.value = Result.error(data, e.message)
             }
         }
     }
