@@ -25,7 +25,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideDetailedRepository(api: Api): DetailedRepository {
-        return DetailedRepositoryImpl(api)
+    fun provideDetailedRepository(api: Api, moviesDao: PopularMoviesDao): DetailedRepository {
+        return DetailedRepositoryImpl(api, moviesDao)
     }
 }

@@ -30,14 +30,14 @@ class HomeViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
 ) : ViewModel() {
 
-    private val _popularMovies = MutableLiveData<Result<List<Movie>?>>()
-    val popularMovies: LiveData<Result<List<Movie>?>> = _popularMovies
+    private val _popularMovies = MutableLiveData<Result<MoviesResponse>?>()
+    val popularMovies: LiveData<Result<MoviesResponse>?> = _popularMovies
 
-    private val _topRatedMovies = MutableLiveData<Result<List<Movie>?>>(null)
-    var topRatedMovies: LiveData<Result<List<Movie>?>> = _topRatedMovies
+    private val _topRatedMovies = MutableLiveData<Result<MoviesResponse>?>(null)
+    var topRatedMovies: LiveData<Result<MoviesResponse>?> = _topRatedMovies
 
-    private val _upcomingMovies = MutableLiveData<Result<List<Movie>?>>(null)
-    val upcomingMovies: LiveData<Result<List<Movie>?>> = _upcomingMovies
+    private val _upcomingMovies = MutableLiveData<Result<MoviesResponse>?>(null)
+    val upcomingMovies: LiveData<Result<MoviesResponse>?> = _upcomingMovies
 
     var popularPages = 1
     var topPages = 1
@@ -46,13 +46,13 @@ class HomeViewModel @Inject constructor(
     fun getPopularMovies(page: Int) {
         viewModelScope.launch {
             _popularMovies.value = Result.loading(null)
+            var data: MoviesResponse? = null
             try {
-                getPopularMoviesUseCase.invoke(page).collect {
-                    _popularMovies.value = Result.success(it)
-                }
+                data = getPopularMoviesUseCase.invoke(page)
+                _popularMovies.value = Result.success(data)
             } catch (e: Exception) {
                 println("Ex 1: ${e.message}")
-                _popularMovies.value = Result.error(null, e.message)
+                _popularMovies.value = Result.error(data, e.message)
             }
         }
     }
@@ -60,13 +60,13 @@ class HomeViewModel @Inject constructor(
     fun getTopRatedMovies(page: Int) {
         viewModelScope.launch {
             _topRatedMovies.value = Result.loading(null)
-            try {
-                getTopRatedMoviesUseCase.invoke(page).collect {
-                    _topRatedMovies.value = Result.success(it)
-                }
+            var data: MoviesResponse? = null
+            return@launch try {
+                data = getTopRatedMoviesUseCase.invoke(page)
+                _topRatedMovies.value = Result.success(data)
             } catch (e: Exception) {
                 println("Ex 2: ${e.message}")
-                _topRatedMovies.value = Result.error(null, e.message)
+                _topRatedMovies.value = Result.error(data, e.message)
             }
         }
     }
@@ -74,13 +74,13 @@ class HomeViewModel @Inject constructor(
     fun getUpcomingMovies(page: Int) {
         viewModelScope.launch {
             _upcomingMovies.value = Result.loading(null)
+            var data: MoviesResponse? = null
             try {
-                getUpcomingMoviesUseCase.invoke(page).collect {
-                    _upcomingMovies.value = Result.success(it)
-                }
+                data = getUpcomingMoviesUseCase.invoke(page)
+                _upcomingMovies.value = Result.success(data)
             } catch (e: Exception) {
                 println("Ex 3: ${e.message}")
-                _topRatedMovies.value = Result.error(null, e.message)
+                _topRatedMovies.value = Result.error(data, e.message)
             }
         }
     }

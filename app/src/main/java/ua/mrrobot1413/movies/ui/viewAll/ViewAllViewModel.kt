@@ -26,8 +26,8 @@ class ViewAllViewModel @Inject constructor(
     private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
 ): ViewModel() {
 
-    private val _movies = MutableLiveData<Result<List<Movie>?>>()
-    val movies: LiveData<Result<List<Movie>?>> = _movies
+    private val _movies = MutableLiveData<Result<MoviesResponse>?>()
+    val movies: LiveData<Result<MoviesResponse>?> = _movies
 
     var pages = 1
 
@@ -37,13 +37,11 @@ class ViewAllViewModel @Inject constructor(
             try {
                 delay(600)
                 val useCase = when(requestType) {
-                    RequestType.POPULAR -> getPopularMoviesUseCase.invoke(page)
+                    RequestType.POPULAR -> getTopRatedMoviesUseCase.invoke(page)
                     RequestType.TOP_RATED -> getTopRatedMoviesUseCase.invoke(page)
                     RequestType.UPCOMING -> getUpcomingMoviesUseCase.invoke(page)
                 }
-                useCase.collect {
-                    _movies.value = Result.success(it)
-                }
+                _movies.value = Result.success(useCase)
             } catch (e: Exception) {
                 println("Ex 4: ${e.message}")
                 _movies.value = Result.error(null, e.message)

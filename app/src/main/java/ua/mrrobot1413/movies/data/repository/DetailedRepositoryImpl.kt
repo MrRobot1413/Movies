@@ -10,7 +10,8 @@ import javax.inject.Singleton
 
 @Singleton
 class DetailedRepositoryImpl @Inject constructor(
-    private val api: Api
+    private val api: Api,
+    private val moviesDao: PopularMoviesDao
 ): DetailedRepository {
     override suspend fun getMovieDetails(id: Int): DetailedMovie {
         return api.getMovieDetails(id)

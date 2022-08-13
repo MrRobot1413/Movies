@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ua.mrrobot1413.movies.data.storage.AppDatabase
 import ua.mrrobot1413.movies.data.storage.dao.*
+import ua.mrrobot1413.movies.data.storage.model.PopularMovieRemoteKeys
 import ua.mrrobot1413.movies.utils.Constants
 import javax.inject.Singleton
 
@@ -41,5 +42,23 @@ object DatabaseModule {
     @Provides
     fun provideUpcomingMoviesDao(appDatabase: AppDatabase): UpcomingMoviesDao {
         return appDatabase.upcomingMoviesDao()
+    }
+
+    @Singleton
+    @Provides
+    fun providePopularMovieRemoteKeysDao(appDatabase: AppDatabase): PopularMovieRemoteKeyDao {
+        return appDatabase.popularMovieRemoteKeysDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTopMovieRemoteKeysDao(appDatabase: AppDatabase): TopMovieRemoteKeyDao {
+        return appDatabase.topMovieRemoteKeysDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpcomingMovieRemoteKeysDao(appDatabase: AppDatabase): UpcomingMovieRemoteKeyDao {
+        return appDatabase.upcomingMovieRemoteKeysDao()
     }
 }

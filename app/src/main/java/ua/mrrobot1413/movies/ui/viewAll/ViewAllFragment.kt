@@ -72,7 +72,7 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
                     val visibleItemCount = layoutManager.childCount
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
+                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
                         viewModel.pages++
                         if (requestType != null) {
                             viewModel.getMovies(requestType, viewModel.pages)
@@ -93,11 +93,11 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
                         }
                         RequestStatus.SUCCESS -> {
                             lottieLoaderAnimation.hide()
-                            val list = it.data?.let { movies ->
+                            val list = it.data?.results?.let { movies ->
                                 (adapter.currentList as MutableList<Movie>).plus(
                                     movies
                                 )
-                            }?.toSet()?.toList()
+                            }
                             adapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {

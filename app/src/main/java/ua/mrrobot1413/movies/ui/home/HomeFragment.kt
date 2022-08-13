@@ -1,19 +1,15 @@
 package ua.mrrobot1413.movies.ui.home
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.FooterAdapter
 import ua.mrrobot1413.movies.data.network.model.Movie
@@ -92,9 +88,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 )
             }
 
-            viewModel.getPopularMovies(viewModel.popularPages)
-            viewModel.getTopRatedMovies(viewModel.topPages)
-            viewModel.getUpcomingMovies(viewModel.upcomingPages)
+            viewModel.getPopularMovies(1)
+            viewModel.getTopRatedMovies(1)
+            viewModel.getUpcomingMovies(1)
 
             initLists()
         }
@@ -109,19 +105,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 popularMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if (popularFirstLoad) {
+                            if(popularFirstLoad) {
                                 loading()
-                                popularAdapter.submitList(listOf())
                                 popularFirstLoad = false
                             }
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
-                            val list = it.data?.let { movies ->
+                            val list = it.data?.results?.let { movies ->
                                 (popularAdapter.currentList as MutableList<Movie>).plus(
                                     movies
                                 )
-                            }?.toSet()?.toList()
+                            }
                             popularAdapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {
@@ -138,19 +133,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 topRatedMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if (topFirstLoad) {
+                            if(topFirstLoad) {
                                 loading()
-                                topRatedAdapter.submitList(listOf())
                                 topFirstLoad = false
                             }
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
-                            val list = it.data?.let { movies ->
+                            val list = it.data?.results?.let { movies ->
                                 (topRatedAdapter.currentList as MutableList<Movie>).plus(
                                     movies
                                 )
-                            }?.toSet()?.toList()
+                            }
                             topRatedAdapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {
@@ -167,19 +161,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 upcomingMovies.observe(viewLifecycleOwner) {
                     when (it?.status) {
                         RequestStatus.LOADING -> {
-                            if (upcomingFirstLoad) {
+                            if(upcomingFirstLoad) {
                                 loading()
-                                upcomingAdapter.submitList(listOf())
                                 upcomingFirstLoad = false
                             }
                         }
                         RequestStatus.SUCCESS -> {
                             successLoad()
-                            val list = it.data?.let { movies ->
+                            val list = it.data?.results?.let { movies ->
                                 (upcomingAdapter.currentList as MutableList<Movie>).plus(
                                     movies
                                 )
-                            }?.toSet()?.toList()
+                            }
                             upcomingAdapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {
@@ -241,7 +234,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val visibleItemCount = layoutManager.childCount
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
+                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
                         viewModel.popularPages++
                         viewModel.getPopularMovies(viewModel.popularPages)
                     }
@@ -260,12 +253,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val visibleItemCount = layoutManager.childCount
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-                    lifecycleScope.launch {
-                        if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
-                            viewModel.topPages++
-                            viewModel.getTopRatedMovies(viewModel.topPages)
-                        }
-                        delay(1000)
+                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
+                        viewModel.topPages++
+                        viewModel.getTopRatedMovies(viewModel.topPages)
                     }
                 }
             })
@@ -282,7 +272,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val visibleItemCount = layoutManager.childCount
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
+                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
                         viewModel.upcomingPages++
                         viewModel.getUpcomingMovies(viewModel.upcomingPages)
                     }
