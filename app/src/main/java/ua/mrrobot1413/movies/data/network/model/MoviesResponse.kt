@@ -1,7 +1,6 @@
 package ua.mrrobot1413.movies.data.network.model
 
 import com.google.gson.annotations.SerializedName
-import java.math.BigInteger
 
 data class MoviesResponse(
     @SerializedName("page")
@@ -18,9 +17,5 @@ data class Movie(
     @SerializedName("adult")
     val isAdult: Boolean,
     @SerializedName("poster_path")
-    val frontPoster: String?,
-    @SerializedName("backdrop_path")
-    val backgroundPoster: String,
-    @SerializedName("vote_average")
-    val voteRating: Float
+    val frontPoster: String?
 )

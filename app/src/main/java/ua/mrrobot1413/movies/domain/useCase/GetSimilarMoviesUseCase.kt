@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class GetSimilarMoviesUseCase @Inject constructor(
     private val detailedRepository: DetailedRepository
-){
+) {
 
     suspend fun invoke(id: Int): MoviesResponse {
         return withContext(Dispatchers.IO) { detailedRepository.getSimilarMovies(id) }
