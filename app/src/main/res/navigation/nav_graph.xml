@@ -26,8 +26,8 @@
 
             <argument
                 android:name="id"
-                app:argType="integer"
-                android:defaultValue="0"/>
+                android:defaultValue="0"
+                app:argType="integer" />
         </action>
     </fragment>
 
@@ -35,40 +35,50 @@
         android:id="@+id/viewAllFragment"
         android:name="ua.mrrobot1413.movies.ui.viewAll.ViewAllFragment"
         android:label="ViewAllFragment"
-        tools:layout="@layout/fragment_view_all" >
+        tools:layout="@layout/fragment_view_all">
         <action
             android:id="@+id/action_viewAllFragment_to_fragmentDetailedMovie"
             app:destination="@id/fragmentDetailedMovie">
 
             <argument
                 android:name="id"
-                app:argType="integer"
-                android:defaultValue="0"/>
+                android:defaultValue="0"
+                app:argType="integer" />
         </action>
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:name="ua.mrrobot1413.movies.ui.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_fragmentDetailedMovie"
             app:destination="@id/fragmentDetailedMovie">
 
             <argument
                 android:name="id"
-                app:argType="integer"
-                android:defaultValue="0"/>
+                android:defaultValue="0"
+                app:argType="integer" />
         </action>
     </fragment>
 
     <fragment
         android:id="@+id/fragmentFavorite"
         android:name="ua.mrrobot1413.movies.ui.favorite.FavoriteFragment"
-        tools:layout="@layout/fragment_favorite"/>
+        tools:layout="@layout/fragment_favorite" />
 
     <dialog
         android:id="@+id/fragmentDetailedMovie"
         android:name="ua.mrrobot1413.movies.ui.detailed.DetailedMovieFragment"
-        tools:layout="@layout/fragment_detailed_movie"/>
+        tools:layout="@layout/fragment_detailed_movie">
+        <action
+            android:id="@+id/action_fragmentDetailedMovie_self"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+    </dialog>
 </navigation>
