@@ -7,7 +7,8 @@ import com.google.gson.annotations.SerializedName
 @Entity(tableName = "popularMoviesTable")
 data class PopularMovie(
     @PrimaryKey
-    val id: Long,
+    val id: Int,
+    val position: Int,
     val title: String,
     val isAdult: Boolean,
     val frontPoster: String?
@@ -16,7 +17,8 @@ data class PopularMovie(
 @Entity(tableName = "topMoviesTable")
 data class TopMovie(
     @PrimaryKey
-    val id: Long,
+    val id: Int,
+    val position: Int,
     val title: String,
     val isAdult: Boolean,
     val frontPoster: String?
@@ -25,7 +27,8 @@ data class TopMovie(
 @Entity(tableName = "upcomingMoviesTable")
 data class UpcomingMovie(
     @PrimaryKey
-    val id: Long,
+    val id: Int,
+    val position: Int,
     val title: String,
     val isAdult: Boolean,
     val frontPoster: String?
