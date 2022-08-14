@@ -100,6 +100,8 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                                     adapter.submitData(
                                         data
                                     )
+                                    delay(200)
+                                    recyclerView.scrollToPosition(0)
                                 }
                             }
                         }

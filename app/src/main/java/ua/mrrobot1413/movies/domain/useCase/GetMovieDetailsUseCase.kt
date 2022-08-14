@@ -17,7 +17,7 @@ class GetMovieDetailsUseCase @Inject constructor(
 
     suspend fun invoke(id: Int): DetailedMovie {
         return withContext(Dispatchers.IO) {
-        val response =  detailedRepository.getMovieDetails(id)
+            val response = detailedRepository.getMovieDetails(id)
             response.rating = response.rating.roundTo(1).toFloat()
             response
         }
