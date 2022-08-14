@@ -42,6 +42,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             )
         }
     }
+
     private val topRatedAdapter by lazy {
         TopRatedRecyclerViewAdapter {
             findNavController().navigate(
@@ -49,6 +50,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             )
         }
     }
+
     private val upcomingAdapter by lazy {
         UpcomingRecyclerViewAdapter {
             findNavController().navigate(
