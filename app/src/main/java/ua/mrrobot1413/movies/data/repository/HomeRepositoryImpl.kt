@@ -35,10 +35,9 @@ class HomeRepositoryImpl @Inject constructor(
             popularDao.getMoviesListTable()
         },
         fetch = {
-            api.getPopularMovies(page).results.mapIndexed { index, movie ->
+            api.getPopularMovies(page).results.map { movie ->
                 PopularMovie(
                     movie.id,
-                    index * page,
                     movie.title,
                     movie.isAdult,
                     movie.frontPoster
@@ -57,10 +56,9 @@ class HomeRepositoryImpl @Inject constructor(
             topDao.getMoviesListTable()
         },
         fetch = {
-            api.getTopRatedMovies(page).results.mapIndexed { index, movie ->
+            api.getTopRatedMovies(page).results.map { movie ->
                 TopMovie(
                     movie.id,
-                    index * page,
                     movie.title,
                     movie.isAdult,
                     movie.frontPoster
@@ -79,11 +77,9 @@ class HomeRepositoryImpl @Inject constructor(
             upcomingDao.getMoviesListTable()
         },
         fetch = {
-            delay(2000)
-            api.getUpcomingMovies(page).results.mapIndexed { index, movie ->
+            api.getUpcomingMovies(page).results.map { movie ->
                 UpcomingMovie(
                     movie.id,
-                    index * page,
                     movie.title,
                     movie.isAdult,
                     movie.frontPoster
@@ -92,7 +88,6 @@ class HomeRepositoryImpl @Inject constructor(
         },
         saveFetchResult = { movies ->
             database.withTransaction {
-                upcomingDao.deleteMovies()
                 upcomingDao.insertMoviesList(movies)
             }
         }
