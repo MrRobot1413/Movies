@@ -14,7 +14,7 @@ interface PopularMoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoviesList(list: List<PopularMovie>)
 
-    @Query("SELECT * FROM popularMoviesTable")
+    @Query("SELECT * FROM popularMoviesTable ORDER BY position ASC")
     fun getMoviesListTable(): Flow<List<PopularMovie>>
 
     @Query("DELETE FROM popularMoviesTable")

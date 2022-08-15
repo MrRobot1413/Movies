@@ -10,7 +10,7 @@ interface UpcomingMoviesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMoviesList(list: List<UpcomingMovie>)
 
-    @Query("SELECT * FROM upcomingMoviesTable")
+    @Query("SELECT * FROM upcomingMoviesTable ORDER BY position ASC")
     fun getMoviesListTable(): Flow<List<UpcomingMovie>>
 
     @Query("DELETE FROM upcomingMoviesTable")
