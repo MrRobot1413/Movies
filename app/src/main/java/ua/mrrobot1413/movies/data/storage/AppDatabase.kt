@@ -14,7 +14,7 @@ import ua.mrrobot1413.movies.utils.MoviesListConverter
         TopMovie::class,
         UpcomingMovie::class,
         DetailedMovie::class],
-    version = 15,
+    version = 17,
     exportSchema = false
 )
 @TypeConverters(MoviesListConverter::class, GenreConverter::class)
