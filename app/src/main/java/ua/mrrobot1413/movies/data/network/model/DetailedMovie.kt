@@ -3,6 +3,8 @@ package ua.mrrobot1413.movies.data.network.model
 import com.google.gson.annotations.SerializedName
 
 data class DetailedMovie(
+    @SerializedName("id")
+    val id: Int,
     @SerializedName("backdrop_path")
     val backgroundPoster: String,
     @SerializedName("budget")

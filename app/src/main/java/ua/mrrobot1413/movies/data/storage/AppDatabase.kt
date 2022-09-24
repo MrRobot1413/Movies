@@ -10,17 +10,16 @@ import ua.mrrobot1413.movies.utils.MoviesListConverter
 
 @Database(
     entities = [
-        PopularMovie::class,
-        TopMovie::class,
-        UpcomingMovie::class,
-        DetailedMovie::class],
-    version = 15,
+        Movie::class,
+        DetailedMovie::class,
+        FavoriteMovie::class],
+    version = 18,
     exportSchema = false
 )
 @TypeConverters(MoviesListConverter::class, GenreConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun popularMoviesDao(): PopularMoviesDao
-    abstract fun topMoviesDao(): TopMoviesDao
-    abstract fun upcomingMoviesDao(): UpcomingMoviesDao
+    abstract fun moviesDao(): MoviesDao
+    abstract fun favoriteMoviesDao(): FavoriteMoviesDao
+    abstract fun detailedMoviesDao(): DetailedMoviesDao
 }

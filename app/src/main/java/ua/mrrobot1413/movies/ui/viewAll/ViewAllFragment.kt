@@ -4,25 +4,17 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.R
-import ua.mrrobot1413.movies.base.ExtendedFooterAdapter
-import ua.mrrobot1413.movies.data.network.model.Movie
+import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentViewAllBinding
-import ua.mrrobot1413.movies.ui.MainActivity
-import ua.mrrobot1413.movies.ui.home.HomeFragmentDirections
 import ua.mrrobot1413.movies.utils.Constants.REQUEST_TYPE
 import ua.mrrobot1413.movies.utils.UIUtils.hide
 import ua.mrrobot1413.movies.utils.UIUtils.show
@@ -72,7 +64,7 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
                     val visibleItemCount = layoutManager.childCount
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 2) {
+                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
                         viewModel.pages++
                         if (requestType != null) {
                             viewModel.getMovies(requestType, viewModel.pages)
@@ -93,11 +85,11 @@ class ViewAllFragment : Fragment(R.layout.fragment_view_all) {
                         }
                         RequestStatus.SUCCESS -> {
                             lottieLoaderAnimation.hide()
-                            val list = it.data?.results?.let { movies ->
-                                (adapter.currentList as MutableList<Movie>).plus(
+                            val list = it.data?.let { movies ->
+                                (adapter.currentList as MutableList<MovieResponseModel>).plus(
                                     movies
                                 )
-                            }
+                            }?.toSet()?.toList()
                             adapter.submitList(list)
                         }
                         RequestStatus.ERROR -> {

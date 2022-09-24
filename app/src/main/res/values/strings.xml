@@ -36,4 +36,6 @@
     <string name="similar_movies">Similar movies</string>
     <string name="close">Close</string>
     <string name="status">Status:</string>
+    <string name="movie_added_to_favorite">The movie was added to favorite</string>
+    <string name="movie_removed_to_favorite">The movie was removed from favorite</string>
 </resources>

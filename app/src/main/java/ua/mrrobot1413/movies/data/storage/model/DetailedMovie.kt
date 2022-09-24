@@ -8,7 +8,7 @@ import ua.mrrobot1413.movies.utils.GenreConverter
 
 @Entity(tableName = "detailedMoviesTable")
 data class DetailedMovie(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     val id: Int,
     val backgroundPoster: String,
     val budget: Int,
