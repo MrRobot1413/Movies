@@ -4,17 +4,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.room.withTransaction
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import ua.mrrobot1413.movies.data.network.Api
-import ua.mrrobot1413.movies.data.network.model.Movie
-import ua.mrrobot1413.movies.data.network.model.MoviesResponse
+import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
+import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.data.paging.SearchMoviesPagingSource
 import ua.mrrobot1413.movies.data.storage.AppDatabase
-import ua.mrrobot1413.movies.data.storage.model.PopularMovie
-import ua.mrrobot1413.movies.data.storage.model.TopMovie
-import ua.mrrobot1413.movies.data.storage.model.UpcomingMovie
+import ua.mrrobot1413.movies.data.storage.model.Movie
 import ua.mrrobot1413.movies.domain.HomeRepository
 import ua.mrrobot1413.movies.utils.networkBoundResource
 import javax.inject.Inject
@@ -26,79 +22,82 @@ class HomeRepositoryImpl @Inject constructor(
     private val database: AppDatabase
 ) : HomeRepository {
 
-    private val popularDao = database.popularMoviesDao()
-    private val topDao = database.topMoviesDao()
-    private val upcomingDao = database.upcomingMoviesDao()
+    private val moviesDao = database.moviesDao()
 
     override suspend fun getPopularMovies(page: Int) = networkBoundResource(
         query = {
-            popularDao.getMoviesListTable()
+            moviesDao.getMoviesListTable(RequestType.POPULAR)
         },
         fetch = {
             api.getPopularMovies(page).results.mapIndexed { index, movie ->
-                PopularMovie(
+                Movie(
                     movie.id,
                     index * page,
                     movie.title,
                     movie.isAdult,
-                    movie.frontPoster
+                    movie.frontPoster,
+                    movieType = RequestType.POPULAR
                 )
             }
         },
         saveFetchResult = { movies ->
             database.withTransaction {
-                popularDao.insertMoviesList(movies)
+                moviesDao.insertMoviesList(movies)
             }
         }
     )
 
     override suspend fun getTopRatedMovies(page: Int) = networkBoundResource(
         query = {
-            topDao.getMoviesListTable()
+            moviesDao.getMoviesListTable(RequestType.TOP_RATED)
         },
         fetch = {
             api.getTopRatedMovies(page).results.mapIndexed { index, movie ->
-                TopMovie(
+                Movie(
                     movie.id,
                     index * page,
                     movie.title,
                     movie.isAdult,
-                    movie.frontPoster
+                    movie.frontPoster,
+                    movieType = RequestType.TOP_RATED
                 )
             }
         },
         saveFetchResult = { movies ->
             database.withTransaction {
-                topDao.insertMoviesList(movies)
+                moviesDao.insertMoviesList(movies)
             }
         }
     )
 
     override suspend fun getUpcomingMovies(page: Int) = networkBoundResource(
         query = {
-            upcomingDao.getMoviesListTable()
+            moviesDao.getMoviesListTable(RequestType.UPCOMING)
         },
         fetch = {
-            delay(2000)
             api.getUpcomingMovies(page).results.mapIndexed { index, movie ->
-                UpcomingMovie(
+                Movie(
                     movie.id,
                     index * page,
                     movie.title,
                     movie.isAdult,
-                    movie.frontPoster
+                    movie.frontPoster,
+                    movieType = RequestType.UPCOMING
                 )
             }
         },
         saveFetchResult = { movies ->
             database.withTransaction {
-                upcomingDao.deleteMovies()
-                upcomingDao.insertMoviesList(movies)
+                moviesDao.insertMoviesList(movies)
             }
         }
     )
 
-    override suspend fun searchMovies(query: String): Flow<PagingData<Movie>> {
+    override suspend fun getMovie(id: Int): Movie {
+        return database.moviesDao().getMovie(id)
+    }
+
+    override suspend fun searchMovies(query: String): Flow<PagingData<MovieResponseModel>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 50

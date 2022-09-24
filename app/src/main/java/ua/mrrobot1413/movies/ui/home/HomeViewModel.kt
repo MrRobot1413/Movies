@@ -4,40 +4,30 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
-import ua.mrrobot1413.movies.data.network.model.Movie
-import ua.mrrobot1413.movies.data.network.model.MoviesResponse
+import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
 import ua.mrrobot1413.movies.data.network.model.Result
-import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
-import ua.mrrobot1413.movies.domain.useCase.GetTopRatedMoviesUseCase
-import ua.mrrobot1413.movies.domain.useCase.GetUpcomingMoviesUseCase
+import ua.mrrobot1413.movies.domain.useCase.home.GetPopularMoviesUseCase
+import ua.mrrobot1413.movies.domain.useCase.home.GetTopRatedMoviesUseCase
+import ua.mrrobot1413.movies.domain.useCase.home.GetUpcomingMoviesUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getPopularMoviesUseCase: GetPopularMoviesUseCase,
-    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
-    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase
+    private val getPopularMoviesUseCase: GetPopularMoviesUseCase?,
+    private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase?,
+    private val getUpcomingMoviesUseCase: GetUpcomingMoviesUseCase?
 ) : ViewModel() {
 
-    private val _popularMovies = MutableLiveData<Result<List<Movie>?>>()
-    val popularMovies: LiveData<Result<List<Movie>?>> = _popularMovies
+    private val _popularMovies = MutableLiveData<Result<List<MovieResponseModel>?>>()
+    val popularMovies: LiveData<Result<List<MovieResponseModel>?>> = _popularMovies
 
-    private val _topRatedMovies = MutableLiveData<Result<List<Movie>?>>(null)
-    var topRatedMovies: LiveData<Result<List<Movie>?>> = _topRatedMovies
+    private val _topRatedMovies = MutableLiveData<Result<List<MovieResponseModel>?>>(null)
+    var topRatedMovies: LiveData<Result<List<MovieResponseModel>?>> = _topRatedMovies
 
-    private val _upcomingMovies = MutableLiveData<Result<List<Movie>?>>(null)
-    val upcomingMovies: LiveData<Result<List<Movie>?>> = _upcomingMovies
+    private val _upcomingMovies = MutableLiveData<Result<List<MovieResponseModel>?>>(null)
+    val upcomingMovies: LiveData<Result<List<MovieResponseModel>?>> = _upcomingMovies
 
     var popularPages = 1
     var topPages = 1
@@ -47,7 +37,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _popularMovies.value = Result.loading(null)
             try {
-                getPopularMoviesUseCase.invoke(page).collect {
+                getPopularMoviesUseCase?.invoke(page)?.collect {
                     _popularMovies.value = Result.success(it)
                 }
             } catch (e: Exception) {
@@ -61,7 +51,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _topRatedMovies.value = Result.loading(null)
             try {
-                getTopRatedMoviesUseCase.invoke(page).collect {
+                getTopRatedMoviesUseCase?.invoke(page)?.collect {
                     _topRatedMovies.value = Result.success(it)
                 }
             } catch (e: Exception) {
@@ -75,7 +65,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _upcomingMovies.value = Result.loading(null)
             try {
-                getUpcomingMoviesUseCase.invoke(page).collect {
+                getUpcomingMoviesUseCase?.invoke(page)?.collect {
                     _upcomingMovies.value = Result.success(it)
                 }
             } catch (e: Exception) {

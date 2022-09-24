@@ -1,4 +1,4 @@
-package ua.mrrobot1413.movies.domain.useCase
+package ua.mrrobot1413.movies.domain.useCase.detailed
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

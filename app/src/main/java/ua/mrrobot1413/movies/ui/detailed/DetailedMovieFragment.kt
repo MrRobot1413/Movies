@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,10 +22,13 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_EXPANDED
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.R
+import ua.mrrobot1413.movies.data.network.model.DetailedMovie
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
+import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentDetailedMovieBinding
 import ua.mrrobot1413.movies.ui.detailed.recycler.GenresRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.detailed.recycler.SimilarMoviesRecyclerViewAdapter
@@ -47,9 +51,12 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
     }
     private val similarMoviesAdapter by lazy {
         SimilarMoviesRecyclerViewAdapter {
-            findNavController().navigate(DetailedMovieFragmentDirections.actionFragmentDetailedMovieSelf().setId(it))
+            findNavController().navigate(
+                DetailedMovieFragmentDirections.actionFragmentDetailedMovieSelf().setId(it)
+            )
         }
     }
+    private var detailedMovie: DetailedMovie? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -87,6 +94,28 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
             id?.let {
                 viewModel.getMovieDetails(it)
                 viewModel.getSimilarMovies(it)
+                lifecycleScope.launch {
+                    var isFavorite = viewModel.isFavoriteMovie(id)
+                    if (!isFavorite) {
+                        binding.imgAddToFavorite.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_star_filled_yellow
+                            )
+                        )
+                    } else {
+                        binding.imgAddToFavorite.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_star_unfilled
+                            )
+                        )
+                    }
+                    imgAddToFavorite.setOnClickListener {
+                        changeFavoriteButtonStatus(isFavorite)
+                        isFavorite = !isFavorite
+                    }
+                }
             }
 
             imgClose.setOnClickListener { dismiss() }
@@ -130,6 +159,7 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
                                 .into(movieImg)
 
                             it.data?.let { data ->
+                                detailedMovie = data
                                 txtTitle.text = data.title
                                 genresAdapter.submitList(data.genres)
                                 txtOverview.text = data.overview
@@ -181,6 +211,30 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
             imgAddToFavorite.isVisible = false
             detailedMovieInfoLayout.isVisible = false
             headerLayout.isVisible = true
+        }
+    }
+
+    private fun changeFavoriteButtonStatus(isFavorite: Boolean) {
+        if (isFavorite) {
+            binding.imgAddToFavorite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_star_filled_yellow
+                )
+            )
+            detailedMovie?.let { movie ->
+                arguments?.getInt(ID)?.let { id -> viewModel.addToFavorite(id, movie) }
+            }
+        } else {
+            binding.imgAddToFavorite.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_star_unfilled
+                )
+            )
+            detailedMovie?.let { movie ->
+                arguments?.getInt(ID)?.let { id -> viewModel.removeFromFavorite(id, movie.id) }
+            }
         }
     }
 
