@@ -4,15 +4,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.domain.DetailedRepository
+import ua.mrrobot1413.movies.domain.FavoriteRepository
 import javax.inject.Inject
 
 class FavoriteMovieUseCase @Inject constructor(
-    private val detailedRepository: DetailedRepository
+    private val favoriteRepository: FavoriteRepository
 ) {
 
     suspend fun invoke(id: Int): Boolean {
         return withContext(Dispatchers.IO) {
-            detailedRepository.isFavoriteMovie(id)
+            favoriteRepository.isFavoriteMovie(id)
         }
     }
 }

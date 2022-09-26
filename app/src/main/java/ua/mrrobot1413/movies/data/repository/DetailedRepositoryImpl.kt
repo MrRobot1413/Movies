@@ -15,6 +15,9 @@ class DetailedRepositoryImpl @Inject constructor(
     private val api: Api,
     private val appDatabase: AppDatabase
 ): DetailedRepository {
+
+    private val dao = appDatabase.detailedMoviesDao()
+
     override suspend fun getMovieDetails(id: Int): DetailedMovie {
         return api.getMovieDetails(id)
     }
@@ -23,17 +26,11 @@ class DetailedRepositoryImpl @Inject constructor(
         return api.getSimilarMovies(id)
     }
 
-    override suspend fun isFavoriteMovie(id: Int): Boolean {
-        return appDatabase.favoriteMoviesDao().isFavorite(id) == 0
+    override suspend fun addToFavorite(detailedMovie: ua.mrrobot1413.movies.data.storage.model.DetailedMovie) {
+        dao.insertMovie(detailedMovie)
     }
 
-    override suspend fun addToFavorite(movie: FavoriteMovie, detailedMovie: ua.mrrobot1413.movies.data.storage.model.DetailedMovie) {
-        appDatabase.favoriteMoviesDao().insertMovie(movie)
-        appDatabase.detailedMoviesDao().insertMovie(detailedMovie)
-    }
-
-    override suspend fun removeFromFavorite(id: Int, detailedMovieId: Int) {
-        appDatabase.favoriteMoviesDao().removeMovie(id)
-        appDatabase.detailedMoviesDao().removeMovie(detailedMovieId)
+    override suspend fun removeFromFavorite(id: Int) {
+        dao.removeMovie(id)
     }
 }

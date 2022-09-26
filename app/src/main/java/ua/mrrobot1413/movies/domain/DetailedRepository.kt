@@ -10,7 +10,6 @@ interface DetailedRepository {
 
     suspend fun getMovieDetails(id: Int): DetailedMovie
     suspend fun getSimilarMovies(id: Int): MoviesResponse
-    suspend fun isFavoriteMovie(id: Int): Boolean
-    suspend fun addToFavorite(movie: FavoriteMovie, detailedMovie: ua.mrrobot1413.movies.data.storage.model.DetailedMovie)
-    suspend fun removeFromFavorite(id: Int, detailedMovieId: Int)
+    suspend fun addToFavorite(detailedMovie: ua.mrrobot1413.movies.data.storage.model.DetailedMovie)
+    suspend fun removeFromFavorite(id: Int)
 }
