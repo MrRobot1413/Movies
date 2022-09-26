@@ -4,13 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import ua.mrrobot1413.movies.data.storage.model.FavoriteMovie
 
 @Dao
 interface FavoriteMoviesDao {
 
     @Query("SELECT * FROM favoriteMoviesTable")
-    suspend fun getFavoriteMovies(): List<FavoriteMovie>
+    fun getFavoriteMovies(): Flow<List<FavoriteMovie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMovie(movie: FavoriteMovie)

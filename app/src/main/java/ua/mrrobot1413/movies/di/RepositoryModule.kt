@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ua.mrrobot1413.movies.data.network.Api
 import ua.mrrobot1413.movies.data.repository.DetailedRepositoryImpl
+import ua.mrrobot1413.movies.data.repository.FavoriteRepositoryImpl
 import ua.mrrobot1413.movies.data.repository.HomeRepositoryImpl
 import ua.mrrobot1413.movies.data.storage.AppDatabase
 import ua.mrrobot1413.movies.domain.DetailedRepository
+import ua.mrrobot1413.movies.domain.FavoriteRepository
 import ua.mrrobot1413.movies.domain.HomeRepository
 import javax.inject.Singleton
 
@@ -26,5 +28,11 @@ object RepositoryModule {
     @Singleton
     fun provideDetailedRepository(api: Api, appDatabase: AppDatabase): DetailedRepository {
         return DetailedRepositoryImpl(api, appDatabase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteRepository(appDatabase: AppDatabase): FavoriteRepository {
+        return FavoriteRepositoryImpl(appDatabase)
     }
 }
