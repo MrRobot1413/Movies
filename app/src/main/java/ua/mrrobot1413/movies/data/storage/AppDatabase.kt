@@ -13,7 +13,7 @@ import ua.mrrobot1413.movies.utils.MoviesListConverter
         Movie::class,
         DetailedMovie::class,
         FavoriteMovie::class],
-    version = 18,
+    version = 19,
     exportSchema = false
 )
 @TypeConverters(MoviesListConverter::class, GenreConverter::class)

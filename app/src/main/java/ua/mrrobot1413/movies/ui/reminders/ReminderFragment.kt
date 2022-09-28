@@ -1,4 +1,4 @@
-package ua.mrrobot1413.movies.ui.favorite
+package ua.mrrobot1413.movies.ui.reminders
 
 import android.os.Bundle
 import android.view.View
@@ -20,13 +20,13 @@ import ua.mrrobot1413.movies.databinding.FragmentFavoriteBinding
 import ua.mrrobot1413.movies.utils.UIUtils.showSnackbar
 
 @AndroidEntryPoint
-class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
+class ReminderFragment : Fragment(R.layout.fragment_favorite) {
 
     private val binding: FragmentFavoriteBinding by viewBinding()
-    private val viewModel: FavoriteViewModel by viewModels()
+    private val viewModel: RemindersViewModel by viewModels()
     private val adapter by lazy {
-        FavoriteRecyclerViewAdapter {
-            findNavController().navigate(FavoriteFragmentDirections.actionFragmentFavoriteToFragmentDetailedMovie().setId(it))
+        ReminderRecyclerViewAdapter {
+            findNavController().navigate(ReminderFragmentDirections.actionReminderFragmentToFragmentDetailedMovie().setId(it))
         }
     }
 
@@ -41,31 +41,31 @@ class FavoriteFragment : Fragment(R.layout.fragment_favorite) {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-            viewModel.getFavoriteMovies()
+//            viewModel.getFavoriteMovies()
         }
     }
 
     private fun initObservers() {
-        viewModel.run {
-            binding.run {
-                movies.observe(viewLifecycleOwner) {
-                    when (it.status) {
-                        RequestStatus.LOADING -> loading()
-                        RequestStatus.SUCCESS -> {
-                            successLoad(it.data?.isEmpty() == true)
-                            adapter.submitList(it.data)
-                        }
-                        RequestStatus.ERROR -> {
-                            showSnackbar(
-                                requireView(),
-                                getString(R.string.unexpected_error_occurred),
-                                Snackbar.LENGTH_SHORT
-                            )
-                        }
-                    }
-                }
-            }
-        }
+//        viewModel.run {
+//            binding.run {
+//                movies.observe(viewLifecycleOwner) {
+//                    when (it.status) {
+//                        RequestStatus.LOADING -> loading()
+//                        RequestStatus.SUCCESS -> {
+//                            successLoad(it.data?.isEmpty() == true)
+//                            adapter.submitList(it.data)
+//                        }
+//                        RequestStatus.ERROR -> {
+//                            showSnackbar(
+//                                requireView(),
+//                                getString(R.string.unexpected_error_occurred),
+//                                Snackbar.LENGTH_SHORT
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun loading() {
