@@ -1,7 +1,9 @@
 package ua.mrrobot1413.movies.ui.detailed
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.PorterDuff
@@ -9,12 +11,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
@@ -34,10 +41,13 @@ import ua.mrrobot1413.movies.ui.detailed.recycler.GenresRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.detailed.recycler.SimilarMoviesRecyclerViewAdapter
 import ua.mrrobot1413.movies.utils.Constants.ID
 import ua.mrrobot1413.movies.utils.Constants.IMG_URL
+import ua.mrrobot1413.movies.utils.ReminderWorker
+import ua.mrrobot1413.movies.utils.UIUtils.show
 import ua.mrrobot1413.movies.utils.UIUtils.showSnackbar
 import ua.mrrobot1413.movies.utils.UIUtils.toggleReadMoreTextView
 import java.text.NumberFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class DetailedMovieFragment : BottomSheetDialogFragment() {
@@ -83,6 +93,7 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        createReminder("", 1)
         init()
         initObservers()
     }
@@ -132,6 +143,38 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
             similarMoviesRecyclerView.adapter = similarMoviesAdapter
             similarMoviesRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+
+            imgRemind.setOnClickListener {
+                val calendar = Calendar.getInstance()
+                val datePicker = DatePickerDialog(
+                    requireContext(),
+                    R.style.ReminderDialogTheme,
+                    { _, year, month, dayOfMonth ->
+                        calendar.set(Calendar.YEAR, year)
+                        calendar.set(Calendar.MONTH, month)
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        val timePicker = TimePickerDialog(
+                            requireContext(),
+                            R.style.ReminderDialogTheme,
+                            { _, hour, minute ->
+                                calendar.set(Calendar.HOUR_OF_DAY, hour)
+                                calendar.set(Calendar.MINUTE, minute)
+                                // Set reminder
+
+                            },
+                            calendar.get(Calendar.HOUR_OF_DAY),
+                            calendar.get(Calendar.MINUTE),
+                            true
+                        )
+                        timePicker.show()
+                    },
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                )
+                datePicker.show()
+            }
         }
     }
 
@@ -194,6 +237,20 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    private fun createReminder(message: String, timeDelayInSeconds: Long) {
+        val myWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+            .setInitialDelay(timeDelayInSeconds, TimeUnit.SECONDS)
+            .setInputData(
+                workDataOf(
+                    "title" to getString(R.string.reminder),
+                    "message" to message,
+                )
+            )
+            .build()
+
+        WorkManager.getInstance(requireContext()).enqueue(myWorkRequest)
     }
 
     private fun successLoad() {

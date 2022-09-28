@@ -39,4 +39,5 @@
     <string name="movie_added_to_favorite">The movie was added to favorite</string>
     <string name="movie_removed_to_favorite">The movie was removed from favorite</string>
     <string name="this_list_is_empty_yet">This list is empty yet</string>
+    <string name="reminder">Reminder</string>
 </resources>
