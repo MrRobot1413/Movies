@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
 import ua.mrrobot1413.movies.data.storage.model.FavoriteMovie
 import ua.mrrobot1413.movies.data.storage.model.Movie
+import ua.mrrobot1413.movies.data.storage.model.ReminderMovie
 import ua.mrrobot1413.movies.databinding.ItemFavoriteMovieBinding
 import ua.mrrobot1413.movies.databinding.ItemMovieBinding
 import ua.mrrobot1413.movies.ui.home.recycler.LatestRecyclerViewHolder
@@ -14,14 +15,14 @@ import ua.mrrobot1413.movies.ui.home.recycler.LatestRecyclerViewHolder
 class ReminderRecyclerViewAdapter(
     private val onItemClicked: (Int) -> Unit
 ) :
-    ListAdapter<FavoriteMovie, ReminderRecyclerViewHolder>(object : DiffUtil.ItemCallback<FavoriteMovie>() {
-        override fun areItemsTheSame(oldItem: FavoriteMovie, newItem: FavoriteMovie): Boolean {
+    ListAdapter<ReminderMovie, ReminderRecyclerViewHolder>(object : DiffUtil.ItemCallback<ReminderMovie>() {
+        override fun areItemsTheSame(oldItem: ReminderMovie, newItem: ReminderMovie): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: FavoriteMovie,
-            newItem: FavoriteMovie
+            oldItem: ReminderMovie,
+            newItem: ReminderMovie
         ): Boolean {
             return oldItem == newItem
         }

@@ -11,7 +11,7 @@ import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.data.paging.SearchMoviesPagingSource
 import ua.mrrobot1413.movies.data.storage.AppDatabase
 import ua.mrrobot1413.movies.data.storage.model.Movie
-import ua.mrrobot1413.movies.domain.HomeRepository
+import ua.mrrobot1413.movies.domain.repositories.HomeRepository
 import ua.mrrobot1413.movies.utils.networkBoundResource
 import javax.inject.Inject
 import javax.inject.Singleton

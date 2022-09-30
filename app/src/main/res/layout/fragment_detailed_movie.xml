@@ -85,28 +85,6 @@
                 app:layout_constraintTop_toTopOf="@+id/txtTitle"
                 app:tint="@android:color/white" />
 
-            <DatePicker
-                android:id="@+id/datePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TimePicker
-                android:id="@+id/timePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:timePickerMode="spinner"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <HorizontalScrollView
                 android:id="@+id/movieDetailsLayout"
                 android:layout_width="match_parent"

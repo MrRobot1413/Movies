@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
-import ua.mrrobot1413.movies.domain.HomeRepository
+import ua.mrrobot1413.movies.domain.repositories.HomeRepository
 import javax.inject.Inject
 
 class GetUpcomingMoviesUseCase @Inject constructor(

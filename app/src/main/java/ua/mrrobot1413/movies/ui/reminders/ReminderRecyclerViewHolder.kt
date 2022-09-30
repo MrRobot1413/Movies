@@ -9,12 +9,13 @@ import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.base.BaseViewHolder
 import ua.mrrobot1413.movies.data.storage.model.FavoriteMovie
 import ua.mrrobot1413.movies.data.storage.model.Movie
+import ua.mrrobot1413.movies.data.storage.model.ReminderMovie
 import ua.mrrobot1413.movies.databinding.ItemFavoriteMovieBinding
 import ua.mrrobot1413.movies.databinding.ItemMovieBinding
 import ua.mrrobot1413.movies.utils.Constants
 
-class ReminderRecyclerViewHolder(private val binding: ItemFavoriteMovieBinding): BaseViewHolder<FavoriteMovie>(binding.root) {
-    override fun bind(item: FavoriteMovie) {
+class ReminderRecyclerViewHolder(private val binding: ItemFavoriteMovieBinding): BaseViewHolder<ReminderMovie>(binding.root) {
+    override fun bind(item: ReminderMovie) {
         binding.run {
             txtAdult.isVisible = item.isAdult
             Glide.with(root.context)
