@@ -93,7 +93,6 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        createReminder("", 1)
         init()
         initObservers()
     }
@@ -106,6 +105,82 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
                 viewModel.getMovieDetails(it)
                 viewModel.getSimilarMovies(it)
                 lifecycleScope.launch {
+                    var isToRemind = viewModel.isReminderMovie(id)
+                    if (isToRemind) {
+                        binding.imgRemind.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_timer_off
+                            )
+                        )
+                    } else {
+                        binding.imgRemind.setImageDrawable(
+                            ContextCompat.getDrawable(
+                                requireContext(),
+                                R.drawable.ic_timer
+                            )
+                        )
+                    }
+                    imgRemind.setOnClickListener {
+                        if (isToRemind) {
+                            // TODO
+                            // delete reminder
+                            detailedMovie?.id?.let { id -> viewModel.deleteReminder(id) }
+                            isToRemind = false
+                            binding.imgRemind.setImageDrawable(
+                                ContextCompat.getDrawable(
+                                    requireContext(),
+                                    R.drawable.ic_timer
+                                )
+                            )
+                        } else {
+                            val calendar = Calendar.getInstance()
+                            val datePicker = DatePickerDialog(
+                                requireContext(),
+                                R.style.ReminderDialogTheme,
+                                { _, year, month, dayOfMonth ->
+                                    calendar.set(Calendar.YEAR, year)
+                                    calendar.set(Calendar.MONTH, month)
+                                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                                    val timePicker = TimePickerDialog(
+                                        requireContext(),
+                                        R.style.ReminderDialogTheme,
+                                        { _, hour, minute ->
+                                            calendar.set(Calendar.HOUR_OF_DAY, hour)
+                                            calendar.set(Calendar.MINUTE, minute)
+                                            // Set reminder
+                                            lifecycleScope.launch {
+                                                detailedMovie?.id?.let { id ->
+                                                    createReminder(
+                                                        getString(R.string.reminder),
+                                                        "${getString(R.string.reminder_to_watch_description)} '${detailedMovie?.title}'",
+                                                        calendar.timeInMillis,
+                                                        id
+                                                    )
+                                                    isToRemind = true
+                                                    binding.imgRemind.setImageDrawable(
+                                                        ContextCompat.getDrawable(
+                                                            requireContext(),
+                                                            R.drawable.ic_timer_off
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        },
+                                        calendar.get(Calendar.HOUR_OF_DAY),
+                                        calendar.get(Calendar.MINUTE),
+                                        true
+                                    )
+                                    timePicker.show()
+                                },
+                                calendar.get(Calendar.YEAR),
+                                calendar.get(Calendar.MONTH),
+                                calendar.get(Calendar.DAY_OF_MONTH)
+                            )
+                            datePicker.show()
+                        }
+                    }
+
                     var isFavorite = viewModel.isFavoriteMovie(id)
                     if (!isFavorite) {
                         binding.imgAddToFavorite.setImageDrawable(
@@ -143,38 +218,6 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
             similarMoviesRecyclerView.adapter = similarMoviesAdapter
             similarMoviesRecyclerView.layoutManager =
                 LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-
-            imgRemind.setOnClickListener {
-                val calendar = Calendar.getInstance()
-                val datePicker = DatePickerDialog(
-                    requireContext(),
-                    R.style.ReminderDialogTheme,
-                    { _, year, month, dayOfMonth ->
-                        calendar.set(Calendar.YEAR, year)
-                        calendar.set(Calendar.MONTH, month)
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                        val timePicker = TimePickerDialog(
-                            requireContext(),
-                            R.style.ReminderDialogTheme,
-                            { _, hour, minute ->
-                                calendar.set(Calendar.HOUR_OF_DAY, hour)
-                                calendar.set(Calendar.MINUTE, minute)
-                                // Set reminder
-
-                            },
-                            calendar.get(Calendar.HOUR_OF_DAY),
-                            calendar.get(Calendar.MINUTE),
-                            true
-                        )
-                        timePicker.show()
-                    },
-                    calendar.get(Calendar.YEAR),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)
-                )
-                datePicker.show()
-            }
         }
     }
 
@@ -239,18 +282,27 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun createReminder(message: String, timeDelayInSeconds: Long) {
-        val myWorkRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
-            .setInitialDelay(timeDelayInSeconds, TimeUnit.SECONDS)
+    private suspend fun createReminder(
+        title: String,
+        message: String,
+        timeDelay: Long,
+        movieId: Int
+    ) {
+        val reminderRequest = OneTimeWorkRequestBuilder<ReminderWorker>()
+            .setInitialDelay(timeDelay - System.currentTimeMillis(), TimeUnit.MILLISECONDS)
             .setInputData(
                 workDataOf(
-                    "title" to getString(R.string.reminder),
+                    "title" to title,
                     "message" to message,
+                    "movieId" to movieId,
+//                    "isToRemind" to detailedMovie?.id?.let { viewModel.isReminderMovie(it) }
                 )
             )
             .build()
 
-        WorkManager.getInstance(requireContext()).enqueue(myWorkRequest)
+        detailedMovie?.let { viewModel.createReminder(it.id, it) }
+//        reminderRequest.id
+        WorkManager.getInstance(requireContext()).enqueue(reminderRequest)
     }
 
     private fun successLoad() {
@@ -259,6 +311,8 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
             imgAddToFavorite.isVisible = true
             detailedMovieInfoLayout.isVisible = true
             headerLayout.isVisible = true
+            imgAddToFavorite.isVisible = true
+            imgRemind.isVisible = true
         }
     }
 
@@ -268,6 +322,8 @@ class DetailedMovieFragment : BottomSheetDialogFragment() {
             imgAddToFavorite.isVisible = false
             detailedMovieInfoLayout.isVisible = false
             headerLayout.isVisible = true
+            imgAddToFavorite.isVisible = false
+            imgRemind.isVisible = false
         }
     }
 

@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 data class FavoriteMovie(
     @PrimaryKey
     val id: Int,
-    val position: Int,
     val title: String,
     val isAdult: Boolean,
     val frontPoster: String?

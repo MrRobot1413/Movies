@@ -32,6 +32,7 @@ class ReminderFragment : Fragment(R.layout.fragment_favorite) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         init()
         initObservers()
     }
@@ -41,31 +42,31 @@ class ReminderFragment : Fragment(R.layout.fragment_favorite) {
             recyclerView.adapter = adapter
             recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
 
-//            viewModel.getFavoriteMovies()
+            viewModel.getMovies()
         }
     }
 
     private fun initObservers() {
-//        viewModel.run {
-//            binding.run {
-//                movies.observe(viewLifecycleOwner) {
-//                    when (it.status) {
-//                        RequestStatus.LOADING -> loading()
-//                        RequestStatus.SUCCESS -> {
-//                            successLoad(it.data?.isEmpty() == true)
-//                            adapter.submitList(it.data)
-//                        }
-//                        RequestStatus.ERROR -> {
-//                            showSnackbar(
-//                                requireView(),
-//                                getString(R.string.unexpected_error_occurred),
-//                                Snackbar.LENGTH_SHORT
-//                            )
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        viewModel.run {
+            binding.run {
+                movies.observe(viewLifecycleOwner) {
+                    when (it.status) {
+                        RequestStatus.LOADING -> loading()
+                        RequestStatus.SUCCESS -> {
+                            successLoad(it.data?.isEmpty() == true)
+                            adapter.submitList(it.data)
+                        }
+                        RequestStatus.ERROR -> {
+                            showSnackbar(
+                                requireView(),
+                                getString(R.string.unexpected_error_occurred),
+                                Snackbar.LENGTH_SHORT
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun loading() {

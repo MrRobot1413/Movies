@@ -2,11 +2,10 @@ package ua.mrrobot1413.movies.data.repository
 
 import ua.mrrobot1413.movies.data.network.Api
 import ua.mrrobot1413.movies.data.network.model.DetailedMovie
+import ua.mrrobot1413.movies.data.network.model.Genre
 import ua.mrrobot1413.movies.data.network.model.MoviesResponse
-import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.data.storage.AppDatabase
-import ua.mrrobot1413.movies.data.storage.model.FavoriteMovie
-import ua.mrrobot1413.movies.domain.DetailedRepository
+import ua.mrrobot1413.movies.domain.repositories.DetailedRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -14,12 +13,32 @@ import javax.inject.Singleton
 class DetailedRepositoryImpl @Inject constructor(
     private val api: Api,
     private val appDatabase: AppDatabase
-): DetailedRepository {
+) : DetailedRepository {
 
     private val dao = appDatabase.detailedMoviesDao()
 
     override suspend fun getMovieDetails(id: Int): DetailedMovie {
         return api.getMovieDetails(id)
+    }
+
+    override suspend fun getSavedMovieDetails(id: Int): DetailedMovie {
+        val movie = dao.getMovie(id)
+        return DetailedMovie(
+            movie.id,
+            movie.backgroundPoster,
+            movie.budget,
+            movie.genres.map {
+                Genre(it.name)
+            },
+            movie.originalLanguage,
+            movie.originalTitle,
+            movie.title,
+            movie.overview,
+            movie.rating,
+            movie.releaseDate,
+            movie.runtime,
+            movie.status
+        )
     }
 
     override suspend fun getSimilarMovies(id: Int): MoviesResponse {

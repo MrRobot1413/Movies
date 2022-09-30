@@ -92,7 +92,7 @@
         </action>
     </dialog>
     <fragment
-        android:id="@+id/reminderFragment"
+        android:id="@+id/fragmentReminders"
         android:name="ua.mrrobot1413.movies.ui.reminders.ReminderFragment"
         android:label="ReminderFragment"
         tools:layout="@layout/fragment_reminder">

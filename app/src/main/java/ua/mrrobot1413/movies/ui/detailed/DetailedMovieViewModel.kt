@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.data.network.model.*
-import ua.mrrobot1413.movies.data.storage.model.Movie
+import ua.mrrobot1413.movies.data.storage.model.ReminderMovie
 import ua.mrrobot1413.movies.domain.useCase.detailed.*
 import javax.inject.Inject
 
@@ -17,7 +17,10 @@ class DetailedMovieViewModel @Inject constructor(
     private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
     private val favoriteMovieUseCase: FavoriteMovieUseCase,
     private val addToFavoriteUseCase: AddToFavoriteUseCase,
-    private val removeFromFavoriteUseCase: RemoveFromFavoriteUseCase
+    private val removeFromFavoriteUseCase: RemoveFromFavoriteUseCase,
+    private val reminderMovieUseCase: ReminderMovieUseCase,
+    private val createReminderMovieUseCase: CreateReminderMovieUseCase,
+    private val deleteReminderUseCase: DeleteReminderUseCase
 ) : ViewModel() {
 
     private val _details = MutableLiveData<Result<DetailedMovie>>()
@@ -61,5 +64,18 @@ class DetailedMovieViewModel @Inject constructor(
         }
     }
 
+    fun createReminder(id: Int, movie: DetailedMovie) {
+        viewModelScope.launch {
+            createReminderMovieUseCase.invoke(id, movie)
+        }
+    }
+
+    fun deleteReminder(id: Int) {
+        viewModelScope.launch {
+            deleteReminderUseCase.invoke(id)
+        }
+    }
+
     suspend fun isFavoriteMovie(id: Int) = favoriteMovieUseCase.invoke(id)
+    suspend fun isReminderMovie(id: Int) = reminderMovieUseCase.invoke(id)
 }
