@@ -65,7 +65,17 @@
     <fragment
         android:id="@+id/fragmentFavorite"
         android:name="ua.mrrobot1413.movies.ui.favorite.FavoriteFragment"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite">
+        <action
+            android:id="@+id/action_fragmentFavorite_to_fragmentDetailedMovie"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+    </fragment>
 
     <dialog
         android:id="@+id/fragmentDetailedMovie"
@@ -81,4 +91,19 @@
                 app:argType="integer" />
         </action>
     </dialog>
+    <fragment
+        android:id="@+id/fragmentReminders"
+        android:name="ua.mrrobot1413.movies.ui.reminders.ReminderFragment"
+        android:label="ReminderFragment"
+        tools:layout="@layout/fragment_reminder">
+        <action
+            android:id="@+id/action_reminderFragment_to_fragmentDetailedMovie"
+            app:destination="@id/fragmentDetailedMovie">
+
+            <argument
+                android:name="id"
+                android:defaultValue="0"
+                app:argType="integer" />
+        </action>
+    </fragment>
 </navigation>

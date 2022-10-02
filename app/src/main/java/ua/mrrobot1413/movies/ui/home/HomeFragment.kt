@@ -1,7 +1,6 @@
 package ua.mrrobot1413.movies.ui.home
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -15,12 +14,10 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ua.mrrobot1413.movies.R
-import ua.mrrobot1413.movies.base.FooterAdapter
-import ua.mrrobot1413.movies.data.network.model.Movie
+import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
 import ua.mrrobot1413.movies.data.network.model.RequestStatus
 import ua.mrrobot1413.movies.data.network.model.RequestType
 import ua.mrrobot1413.movies.databinding.FragmentHomeBinding
-import ua.mrrobot1413.movies.ui.MainActivity
 import ua.mrrobot1413.movies.ui.home.recycler.LatestRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.home.recycler.TopRatedRecyclerViewAdapter
 import ua.mrrobot1413.movies.ui.home.recycler.UpcomingRecyclerViewAdapter
@@ -120,7 +117,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         RequestStatus.SUCCESS -> {
                             successLoad()
                             val list = it.data?.let { movies ->
-                                (popularAdapter.currentList as MutableList<Movie>).plus(
+                                (popularAdapter.currentList as MutableList<MovieResponseModel>).plus(
                                     movies
                                 )
                             }?.toSet()?.toList()
@@ -149,7 +146,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         RequestStatus.SUCCESS -> {
                             successLoad()
                             val list = it.data?.let { movies ->
-                                (topRatedAdapter.currentList as MutableList<Movie>).plus(
+                                (topRatedAdapter.currentList as MutableList<MovieResponseModel>).plus(
                                     movies
                                 )
                             }?.toSet()?.toList()
@@ -178,7 +175,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         RequestStatus.SUCCESS -> {
                             successLoad()
                             val list = it.data?.let { movies ->
-                                (upcomingAdapter.currentList as MutableList<Movie>).plus(
+                                (upcomingAdapter.currentList as MutableList<MovieResponseModel>).plus(
                                     movies
                                 )
                             }?.toSet()?.toList()

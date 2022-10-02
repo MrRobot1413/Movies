@@ -4,21 +4,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import ua.mrrobot1413.movies.base.BaseViewHolder
-import ua.mrrobot1413.movies.data.network.model.Movie
+import ua.mrrobot1413.movies.data.network.model.MovieResponseModel
 import ua.mrrobot1413.movies.databinding.ItemViewMovieBinding
 
 class SearchRecyclerViewAdapter(
     private val onItemClicked: (Int) -> Unit
 ) :
-    PagingDataAdapter<Movie, SearchRecyclerViewHolder>(object : DiffUtil.ItemCallback<Movie>() {
-        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+    PagingDataAdapter<MovieResponseModel, SearchRecyclerViewHolder>(object : DiffUtil.ItemCallback<MovieResponseModel>() {
+        override fun areItemsTheSame(oldItem: MovieResponseModel, newItem: MovieResponseModel): Boolean {
             return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(
-            oldItem: Movie,
-            newItem: Movie
+            oldItem: MovieResponseModel,
+            newItem: MovieResponseModel
         ): Boolean {
             return oldItem == newItem
         }

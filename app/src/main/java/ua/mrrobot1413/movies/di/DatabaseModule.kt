@@ -27,19 +27,19 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providePopularMoviesDao(appDatabase: AppDatabase): PopularMoviesDao {
-        return appDatabase.popularMoviesDao()
+    fun providePopularMoviesDao(appDatabase: AppDatabase): MoviesDao {
+        return appDatabase.moviesDao()
     }
 
-    @Singleton
-    @Provides
-    fun provideTopMoviesDao(appDatabase: AppDatabase): TopMoviesDao {
-        return appDatabase.topMoviesDao()
-    }
-
-    @Singleton
-    @Provides
-    fun provideUpcomingMoviesDao(appDatabase: AppDatabase): UpcomingMoviesDao {
-        return appDatabase.upcomingMoviesDao()
-    }
+//    @Singleton
+//    @Provides
+//    fun provideTopMoviesDao(appDatabase: AppDatabase): TopMoviesDao {
+//        return appDatabase.topMoviesDao()
+//    }
+//
+//    @Singleton
+//    @Provides
+//    fun provideUpcomingMoviesDao(appDatabase: AppDatabase): UpcomingMoviesDao {
+//        return appDatabase.upcomingMoviesDao()
+//    }
 }

@@ -36,4 +36,9 @@
     <string name="similar_movies">Similar movies</string>
     <string name="close">Close</string>
     <string name="status">Status:</string>
+    <string name="movie_added_to_favorite">The movie was added to favorite</string>
+    <string name="movie_removed_to_favorite">The movie was removed from favorite</string>
+    <string name="this_list_is_empty_yet">This list is empty yet</string>
+    <string name="reminder">Reminder</string>
+    <string name="reminder_to_watch_description">We\'re reminding you to watch the movie</string>
 </resources>

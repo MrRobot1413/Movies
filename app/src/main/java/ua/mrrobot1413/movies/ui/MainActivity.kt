@@ -1,5 +1,6 @@
 package ua.mrrobot1413.movies.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,8 @@ import androidx.navigation.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ua.mrrobot1413.movies.R
 import ua.mrrobot1413.movies.databinding.ActivityMainBinding
+import ua.mrrobot1413.movies.ui.favorite.FavoriteFragmentDirections
+import ua.mrrobot1413.movies.utils.NotificationHelper.Companion.MOVIE_ID
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -22,6 +25,14 @@ class MainActivity : AppCompatActivity() {
 
         navController = findNavController(R.id.nav_host_fragment)
         setupSmoothBottomMenu(navController)
+
+        if (intent.getIntExtra(MOVIE_ID, -1) != -1) {
+            navController.navigate(R.id.fragmentFavorite)
+            navController.navigate(
+                FavoriteFragmentDirections.actionFragmentFavoriteToFragmentDetailedMovie()
+                    .setId(intent.getIntExtra(MOVIE_ID, -1))
+            )
+        }
     }
 
     private fun setupSmoothBottomMenu(navController: NavController) {
@@ -33,5 +44,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        println("New")
     }
 }

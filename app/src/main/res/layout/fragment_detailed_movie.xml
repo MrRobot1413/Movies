@@ -1,345 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_gradient_20_dp"
-    android:overScrollMode="never">
+    android:background="@drawable/background_gradient_20_dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/imgClose"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_margin="16dp"
-            android:background="@drawable/background_close"
-            android:contentDescription="@string/close"
-            android:padding="4dp"
-            android:src="@drawable/ic_close"
-            android:translationZ="10dp"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/headerLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/movieImg"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:contentDescription="@string/background_image"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ic_movie"
+                android:id="@+id/imgClose"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_margin="16dp"
+                android:background="@drawable/background_close"
+                android:contentDescription="@string/close"
+                android:padding="4dp"
+                android:src="@drawable/ic_close"
+                android:translationZ="10dp"
+                android:visibility="visible"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/txtTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="start"
-            android:maxLines="1"
-            android:textColor="@android:color/white"
-            android:textSize="22sp"
-            android:translationZ="10dp"
-            app:layout_constraintEnd_toStartOf="@+id/imgAddToFavorite"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/headerLayout"
-            tools:text="Movie name" />
-
-        <ImageView
-            android:id="@+id/imgAddToFavorite"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="@string/add_to_favorite"
-            android:src="@drawable/ic_star_unfilled"
-            app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/txtTitle" />
-
-        <HorizontalScrollView
-            android:id="@+id/movieDetailsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/txtTitle">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:id="@+id/headerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <TextView
-                    android:id="@+id/txtRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
-                    android:contentDescription="@string/add_to_favorite"
-                    android:drawablePadding="2dp"
-                    android:fontFamily="@font/nunito_regular"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    app:drawableEndCompat="@drawable/ic_star_filled_yellow"
-                    app:layout_constraintBottom_toBottomOf="@+id/txtYear"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/txtYear"
-                    tools:text="7.8" />
-
-                <TextView
-                    android:id="@+id/txtYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="8dp"
-                    android:layout_marginStart="4dp"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/nunito_regular"
-                    android:textColor="@android:color/white"
-                    android:textSize="18sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/txtRating"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="2022" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/genresRecyclerView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="12dp"
-                    android:layout_marginVertical="8dp"
-                    android:overScrollMode="never"
-                    app:layout_constraintBottom_toBottomOf="@id/txtYear"
-                    app:layout_constraintStart_toEndOf="@+id/txtYear"
-                    app:layout_constraintTop_toTopOf="@+id/txtYear" />
-
+                <ImageView
+                    android:id="@+id/movieImg"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:contentDescription="@string/background_image"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_movie"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </HorizontalScrollView>
-
-        <TextView
-            android:id="@+id/txtOverview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/nunito_regular"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/movieDetailsLayout"
-            tools:text="Lorem ipsum" />
-
-        <!--        <View-->
-        <!--            android:id="@+id/divider"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="2dp"-->
-        <!--            android:layout_marginVertical="8dp"-->
-        <!--            android:layout_marginHorizontal="16dp"-->
-        <!--            android:background="@android:color/darker_gray"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/txtOverview" />-->
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieLoaderAnimation"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/animation_movie_loader" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/detailedMovieInfoLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="12dp"
-            android:layout_marginHorizontal="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/txtOverview">
 
             <TextView
-                android:id="@+id/txtReleaseDateHeader"
+                android:id="@+id/txtTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/nunito_bold"
+                android:gravity="start"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textSize="22sp"
+                android:translationZ="10dp"
+                app:layout_constraintEnd_toStartOf="@+id/imgRemind"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headerLayout"
+                tools:text="Movie name" />
+
+            <ImageView
+                android:id="@+id/imgAddToFavorite"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
+                android:contentDescription="@string/add_to_favorite"
+                android:src="@drawable/ic_star_unfilled"
+                app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txtTitle" />
+
+            <ImageView
+                android:id="@+id/imgRemind"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="6dp"
+                android:contentDescription="@string/add_to_favorite"
+                android:src="@drawable/ic_timer"
+                app:layout_constraintBottom_toBottomOf="@+id/txtTitle"
+                app:layout_constraintEnd_toStartOf="@+id/imgAddToFavorite"
+                app:layout_constraintTop_toTopOf="@+id/txtTitle"
+                app:tint="@android:color/white" />
+
+            <HorizontalScrollView
+                android:id="@+id/movieDetailsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtTitle">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txtRating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:contentDescription="@string/add_to_favorite"
+                        android:drawablePadding="2dp"
+                        android:fontFamily="@font/nunito_regular"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        app:drawableEndCompat="@drawable/ic_star_filled_yellow"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtYear"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txtYear"
+                        tools:text="7.8" />
+
+                    <TextView
+                        android:id="@+id/txtYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_marginStart="4dp"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/nunito_regular"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/txtRating"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="2022" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/genresRecyclerView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginVertical="8dp"
+                        android:overScrollMode="never"
+                        app:layout_constraintBottom_toBottomOf="@id/txtYear"
+                        app:layout_constraintStart_toEndOf="@+id/txtYear"
+                        app:layout_constraintTop_toTopOf="@+id/txtYear" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/txtOverview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="8dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/movieDetailsLayout"
+                tools:text="Lorem ipsum" />
+
+            <!--        <View-->
+            <!--            android:id="@+id/divider"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="2dp"-->
+            <!--            android:layout_marginVertical="8dp"-->
+            <!--            android:layout_marginHorizontal="16dp"-->
+            <!--            android:background="@android:color/darker_gray"-->
+            <!--            app:layout_constraintTop_toBottomOf="@id/txtOverview" />-->
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottieLoaderAnimation"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/animation_movie_loader" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/detailedMovieInfoLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtOverview">
+
+                <TextView
+                    android:id="@+id/txtReleaseDateHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="@string/date"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/txtReleaseDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtReleaseDateHeader"
+                    app:layout_constraintStart_toEndOf="@+id/txtReleaseDateHeader"
+                    app:layout_constraintTop_toTopOf="@+id/txtReleaseDateHeader"
+                    tools:text="16 Dec 2007" />
+
+                <TextView
+                    android:id="@+id/txtOriginalTitleHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="@string/original_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtReleaseDateHeader" />
+
+                <TextView
+                    android:id="@+id/txtOriginalTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtOriginalTitleHeader"
+                    app:layout_constraintStart_toEndOf="@+id/txtOriginalTitleHeader"
+                    app:layout_constraintTop_toTopOf="@+id/txtOriginalTitleHeader"
+                    tools:text="Original name" />
+
+                <TextView
+                    android:id="@+id/txtOriginalLanguageHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="@string/original_language"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtOriginalTitleHeader" />
+
+                <TextView
+                    android:id="@+id/txtOriginalLanguage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtOriginalLanguageHeader"
+                    app:layout_constraintStart_toEndOf="@+id/txtOriginalLanguageHeader"
+                    app:layout_constraintTop_toBottomOf="@+id/txtOriginalTitleHeader"
+                    tools:text="en" />
+
+                <TextView
+                    android:id="@+id/txtDurationHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="@string/duration"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtOriginalLanguageHeader" />
+
+                <TextView
+                    android:id="@+id/txtDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtDurationHeader"
+                    app:layout_constraintStart_toEndOf="@+id/txtDurationHeader"
+                    app:layout_constraintTop_toTopOf="@+id/txtDurationHeader"
+                    tools:text="120 min" />
+
+                <TextView
+                    android:id="@+id/txtBudgetHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="@string/budget"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtDurationHeader" />
+
+                <TextView
+                    android:id="@+id/txtBudget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtBudgetHeader"
+                    app:layout_constraintStart_toEndOf="@+id/txtBudgetHeader"
+                    app:layout_constraintTop_toTopOf="@+id/txtBudgetHeader"
+                    tools:text="$120.000.000" />
+
+                <TextView
+                    android:id="@+id/txtStatusHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:fontFamily="@font/nunito_bold"
+                    android:text="@string/status"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtBudgetHeader" />
+
+                <TextView
+                    android:id="@+id/txtStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:fontFamily="@font/nunito_regular"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtStatusHeader"
+                    app:layout_constraintStart_toEndOf="@+id/txtStatusHeader"
+                    app:layout_constraintTop_toTopOf="@+id/txtStatusHeader"
+                    tools:text="Released" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/txtSimilarMovies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginVertical="12dp"
                 android:fontFamily="@font/nunito_bold"
-                android:text="@string/date"
+                android:text="@string/similar_movies"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/detailedMovieInfoLayout" />
 
-            <TextView
-                android:id="@+id/txtReleaseDate"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/similarMoviesRecyclerView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txtReleaseDateHeader"
-                app:layout_constraintStart_toEndOf="@+id/txtReleaseDateHeader"
-                app:layout_constraintTop_toTopOf="@+id/txtReleaseDateHeader"
-                tools:text="16 Dec 2007" />
-
-            <TextView
-                android:id="@+id/txtOriginalTitleHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="@string/original_title"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtReleaseDateHeader" />
-
-            <TextView
-                android:id="@+id/txtOriginalTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txtOriginalTitleHeader"
-                app:layout_constraintStart_toEndOf="@+id/txtOriginalTitleHeader"
-                app:layout_constraintTop_toTopOf="@+id/txtOriginalTitleHeader"
-                tools:text="Original name" />
-
-            <TextView
-                android:id="@+id/txtOriginalLanguageHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="@string/original_language"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtOriginalTitleHeader" />
-
-            <TextView
-                android:id="@+id/txtOriginalLanguage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txtOriginalLanguageHeader"
-                app:layout_constraintStart_toEndOf="@+id/txtOriginalLanguageHeader"
-                app:layout_constraintTop_toBottomOf="@+id/txtOriginalTitleHeader"
-                tools:text="en" />
-
-            <TextView
-                android:id="@+id/txtDurationHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="@string/duration"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtOriginalLanguageHeader" />
-
-            <TextView
-                android:id="@+id/txtDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txtDurationHeader"
-                app:layout_constraintStart_toEndOf="@+id/txtDurationHeader"
-                app:layout_constraintTop_toTopOf="@+id/txtDurationHeader"
-                tools:text="120 min" />
-
-            <TextView
-                android:id="@+id/txtBudgetHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="@string/budget"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtDurationHeader" />
-
-            <TextView
-                android:id="@+id/txtBudget"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txtBudgetHeader"
-                app:layout_constraintStart_toEndOf="@+id/txtBudgetHeader"
-                app:layout_constraintTop_toTopOf="@+id/txtBudgetHeader"
-                tools:text="$120.000.000" />
-
-            <TextView
-                android:id="@+id/txtStatusHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="@string/status"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtBudgetHeader" />
-
-            <TextView
-                android:id="@+id/txtStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="10dp"
-                android:fontFamily="@font/nunito_regular"
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/txtStatusHeader"
-                app:layout_constraintStart_toEndOf="@+id/txtStatusHeader"
-                app:layout_constraintTop_toTopOf="@+id/txtStatusHeader"
-                tools:text="Released" />
+                android:layout_marginHorizontal="6dp"
+                android:layout_marginVertical="8dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtSimilarMovies" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/txtSimilarMovies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="12dp"
-            android:fontFamily="@font/nunito_bold"
-            android:text="@string/similar_movies"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/detailedMovieInfoLayout" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/similarMoviesRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="6dp"
-            android:layout_marginVertical="8dp"
-            android:paddingBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/txtSimilarMovies" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -6,11 +6,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ua.mrrobot1413.movies.data.network.Api
 import ua.mrrobot1413.movies.data.repository.DetailedRepositoryImpl
+import ua.mrrobot1413.movies.data.repository.FavoriteRepositoryImpl
 import ua.mrrobot1413.movies.data.repository.HomeRepositoryImpl
+import ua.mrrobot1413.movies.data.repository.ReminderRepositoryImpl
 import ua.mrrobot1413.movies.data.storage.AppDatabase
-import ua.mrrobot1413.movies.data.storage.dao.PopularMoviesDao
-import ua.mrrobot1413.movies.domain.DetailedRepository
-import ua.mrrobot1413.movies.domain.HomeRepository
+import ua.mrrobot1413.movies.domain.repositories.DetailedRepository
+import ua.mrrobot1413.movies.domain.repositories.FavoriteRepository
+import ua.mrrobot1413.movies.domain.repositories.HomeRepository
+import ua.mrrobot1413.movies.domain.repositories.ReminderRepository
 import javax.inject.Singleton
 
 @Module
@@ -25,7 +28,19 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideDetailedRepository(api: Api): DetailedRepository {
-        return DetailedRepositoryImpl(api)
+    fun provideDetailedRepository(api: Api, appDatabase: AppDatabase): DetailedRepository {
+        return DetailedRepositoryImpl(api, appDatabase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFavoriteRepository(appDatabase: AppDatabase): FavoriteRepository {
+        return FavoriteRepositoryImpl(appDatabase)
+    }
+
+    @Provides
+    @Singleton
+    fun provideReminderRepository(appDatabase: AppDatabase): ReminderRepository {
+        return ReminderRepositoryImpl(appDatabase)
     }
 }

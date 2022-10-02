@@ -4,24 +4,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ua.mrrobot1413.movies.data.network.model.DetailedMovie
-import ua.mrrobot1413.movies.data.network.model.Movie
-import ua.mrrobot1413.movies.data.network.model.MoviesResponse
-import ua.mrrobot1413.movies.data.network.model.Result
-import ua.mrrobot1413.movies.domain.useCase.GetMovieDetailsUseCase
-import ua.mrrobot1413.movies.domain.useCase.GetPopularMoviesUseCase
-import ua.mrrobot1413.movies.domain.useCase.GetSimilarMoviesUseCase
-import java.math.BigInteger
+import ua.mrrobot1413.movies.data.network.model.*
+import ua.mrrobot1413.movies.data.storage.model.ReminderMovie
+import ua.mrrobot1413.movies.domain.useCase.detailed.*
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailedMovieViewModel @Inject constructor(
     private val getMovieDetailsUseCase: GetMovieDetailsUseCase,
-    private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase
+    private val getSimilarMoviesUseCase: GetSimilarMoviesUseCase,
+    private val favoriteMovieUseCase: FavoriteMovieUseCase,
+    private val addToFavoriteUseCase: AddToFavoriteUseCase,
+    private val removeFromFavoriteUseCase: RemoveFromFavoriteUseCase,
+    private val reminderMovieUseCase: ReminderMovieUseCase,
+    private val createReminderMovieUseCase: CreateReminderMovieUseCase,
+    private val deleteReminderUseCase: DeleteReminderUseCase
 ) : ViewModel() {
 
     private val _details = MutableLiveData<Result<DetailedMovie>>()
@@ -52,4 +51,31 @@ class DetailedMovieViewModel @Inject constructor(
             }
         }
     }
+
+    fun addToFavorite(id: Int, detailedMovie: DetailedMovie) {
+        viewModelScope.launch {
+            addToFavoriteUseCase.invoke(id, detailedMovie)
+        }
+    }
+
+    fun removeFromFavorite(id: Int, detailedMovieId: Int) {
+        viewModelScope.launch {
+            removeFromFavoriteUseCase.invoke(id, detailedMovieId)
+        }
+    }
+
+    fun createReminder(id: Int, movie: DetailedMovie) {
+        viewModelScope.launch {
+            createReminderMovieUseCase.invoke(id, movie)
+        }
+    }
+
+    fun deleteReminder(id: Int) {
+        viewModelScope.launch {
+            deleteReminderUseCase.invoke(id)
+        }
+    }
+
+    suspend fun isFavoriteMovie(id: Int) = favoriteMovieUseCase.invoke(id)
+    suspend fun isReminderMovie(id: Int) = reminderMovieUseCase.invoke(id)
 }
