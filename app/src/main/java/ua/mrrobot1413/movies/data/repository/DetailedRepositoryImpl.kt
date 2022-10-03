@@ -5,6 +5,7 @@ import ua.mrrobot1413.movies.data.network.model.DetailedMovie
 import ua.mrrobot1413.movies.data.network.model.Genre
 import ua.mrrobot1413.movies.data.network.model.MoviesResponse
 import ua.mrrobot1413.movies.data.storage.AppDatabase
+import ua.mrrobot1413.movies.data.storage.dao.DetailedMoviesDao
 import ua.mrrobot1413.movies.domain.repositories.DetailedRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -12,10 +13,8 @@ import javax.inject.Singleton
 @Singleton
 class DetailedRepositoryImpl @Inject constructor(
     private val api: Api,
-    private val appDatabase: AppDatabase
+    private val dao: DetailedMoviesDao
 ) : DetailedRepository {
-
-    private val dao = appDatabase.detailedMoviesDao()
 
     override suspend fun getMovieDetails(id: Int): DetailedMovie {
         return api.getMovieDetails(id)
