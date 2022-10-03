@@ -1,10 +1,12 @@
 package ua.mrrobot1413.movies.domain.useCase.detailed
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ua.mrrobot1413.movies.data.network.model.DetailedMovie
 import ua.mrrobot1413.movies.data.storage.model.Genre
 import ua.mrrobot1413.movies.data.storage.model.ReminderMovie
+import ua.mrrobot1413.movies.di.IoDispatcher
 import ua.mrrobot1413.movies.domain.repositories.DetailedRepository
 import ua.mrrobot1413.movies.domain.repositories.HomeRepository
 import ua.mrrobot1413.movies.domain.repositories.ReminderRepository
@@ -13,11 +15,13 @@ import javax.inject.Inject
 class CreateReminderMovieUseCase @Inject constructor(
     private val detailedRepository: DetailedRepository,
     private val reminderRepository: ReminderRepository,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    @IoDispatcher
+    private val ioDispatcher: CoroutineDispatcher
 ) {
 
     suspend fun invoke(id: Int, detailedMovie: DetailedMovie) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val movie = homeRepository.getMovie(id)
             detailedRepository.addToFavorite(
                 ua.mrrobot1413.movies.data.storage.model.DetailedMovie(

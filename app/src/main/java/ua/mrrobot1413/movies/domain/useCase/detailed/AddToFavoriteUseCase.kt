@@ -1,26 +1,31 @@
 package ua.mrrobot1413.movies.domain.useCase.detailed
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ua.mrrobot1413.movies.data.storage.model.DetailedMovie
 import ua.mrrobot1413.movies.data.storage.model.FavoriteMovie
 import ua.mrrobot1413.movies.data.storage.model.Genre
+import ua.mrrobot1413.movies.di.IoDispatcher
 import ua.mrrobot1413.movies.domain.repositories.DetailedRepository
 import ua.mrrobot1413.movies.domain.repositories.FavoriteRepository
 import ua.mrrobot1413.movies.domain.repositories.HomeRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
 class AddToFavoriteUseCase @Inject constructor(
     private val detailedRepository: DetailedRepository,
     private val favoriteRepository: FavoriteRepository,
-    private val homeRepository: HomeRepository
+    private val homeRepository: HomeRepository,
+    @IoDispatcher
+    private val ioDispatcher: CoroutineDispatcher
 ) {
 
     suspend fun invoke(
         id: Int,
         detailedMovie: ua.mrrobot1413.movies.data.network.model.DetailedMovie
     ) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             val movie = homeRepository.getMovie(id)
             detailedRepository.addToFavorite(
                 DetailedMovie(
