@@ -2,17 +2,14 @@ package ua.mrrobot1413.movies.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import ua.mrrobot1413.movies.data.storage.AppDatabase
+import ua.mrrobot1413.movies.data.storage.dao.FavoriteMoviesDao
 import ua.mrrobot1413.movies.data.storage.model.FavoriteMovie
 import ua.mrrobot1413.movies.domain.repositories.FavoriteRepository
 import javax.inject.Inject
 
 class FavoriteRepositoryImpl @Inject constructor(
-    private val appDatabase: AppDatabase
+    private val dao: FavoriteMoviesDao
 ) : FavoriteRepository {
-
-    private val dao by lazy {
-        appDatabase.favoriteMoviesDao()
-    }
 
     override suspend fun getFavoriteMovies(): Flow<List<FavoriteMovie>> {
         return dao.getFavoriteMovies()
