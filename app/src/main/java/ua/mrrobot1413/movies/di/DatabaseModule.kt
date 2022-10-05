@@ -31,15 +31,21 @@ object DatabaseModule {
         return appDatabase.moviesDao()
     }
 
-//    @Singleton
-//    @Provides
-//    fun provideTopMoviesDao(appDatabase: AppDatabase): TopMoviesDao {
-//        return appDatabase.topMoviesDao()
-//    }
-//
-//    @Singleton
-//    @Provides
-//    fun provideUpcomingMoviesDao(appDatabase: AppDatabase): UpcomingMoviesDao {
-//        return appDatabase.upcomingMoviesDao()
-//    }
+    @Singleton
+    @Provides
+    fun provideFavoriteMoviesDao(appDatabase: AppDatabase): FavoriteMoviesDao {
+        return appDatabase.favoriteMoviesDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideReminderMoviesDao(appDatabase: AppDatabase): ReminderMoviesDao {
+        return appDatabase.reminderMoviesDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDetailedMoviesDao(appDatabase: AppDatabase): DetailedMoviesDao {
+        return appDatabase.detailedMoviesDao()
+    }
 }

@@ -29,11 +29,16 @@ class HomeViewModel @Inject constructor(
     private val _upcomingMovies = MutableLiveData<Result<List<MovieResponseModel>?>>(null)
     val upcomingMovies: LiveData<Result<List<MovieResponseModel>?>> = _upcomingMovies
 
-    var popularPages = 1
-    var topPages = 1
-    var upcomingPages = 1
+    var popularPages = 0
+    var topPages = 0
+    var upcomingPages = 0
 
-    fun getPopularMovies(page: Int) {
+    fun loadNextPopularPage() {
+        popularPages++
+        getPopularMovies(popularPages)
+    }
+
+    private fun getPopularMovies(page: Int) {
         viewModelScope.launch {
             _popularMovies.value = Result.loading(null)
             try {
@@ -47,7 +52,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getTopRatedMovies(page: Int) {
+    fun loadNextTopPage() {
+        topPages++
+        getTopRatedMovies(topPages)
+    }
+
+    private fun getTopRatedMovies(page: Int) {
         viewModelScope.launch {
             _topRatedMovies.value = Result.loading(null)
             try {
@@ -61,7 +71,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getUpcomingMovies(page: Int) {
+    fun loadNextUpcomingPage() {
+        upcomingPages++
+        getUpcomingMovies(upcomingPages)
+    }
+
+    private fun getUpcomingMovies(page: Int) {
         viewModelScope.launch {
             _upcomingMovies.value = Result.loading(null)
             try {

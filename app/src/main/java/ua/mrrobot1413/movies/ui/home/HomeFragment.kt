@@ -91,9 +91,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 )
             }
 
-            viewModel.getPopularMovies(viewModel.popularPages)
-            viewModel.getTopRatedMovies(viewModel.topPages)
-            viewModel.getUpcomingMovies(viewModel.upcomingPages)
+            viewModel.loadNextPopularPage()
+            viewModel.loadNextTopPage()
+            viewModel.loadNextUpcomingPage()
 
             initLists()
         }
@@ -241,8 +241,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
                     if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
-                        viewModel.popularPages++
-                        viewModel.getPopularMovies(viewModel.popularPages)
+                        viewModel.loadNextPopularPage()
                     }
                 }
             })
@@ -259,12 +258,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val visibleItemCount = layoutManager.childCount
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-                    lifecycleScope.launch {
-                        if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
-                            viewModel.topPages++
-                            viewModel.getTopRatedMovies(viewModel.topPages)
-                        }
-                        delay(1000)
+                    if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
+                        viewModel.loadNextTopPage()
                     }
                 }
             })
@@ -282,8 +277,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
                     if (firstVisibleItem + visibleItemCount >= totalItemCount / 1.1) {
-                        viewModel.upcomingPages++
-                        viewModel.getUpcomingMovies(viewModel.upcomingPages)
+                        viewModel.loadNextUpcomingPage()
                     }
                 }
             })
